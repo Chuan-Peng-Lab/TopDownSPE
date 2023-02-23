@@ -17,15 +17,21 @@ const jsPsych = initJsPsych({
   
   
   
-  
   const images = ['img/C_ambi40.png', 
   'img/S_ambi40.png', 
-  'img/T_ambi40.png',
-  'img/H_ambi40.png']; //是否应该在这一步载入？
+  'img/H_ambi40.png']; 
   
+  const T_image = 'img/T_ambi40.png'
+  const T_text = '铅笔'
+
   const preload = {
       type: jsPsychPreload,
-      images: images,
+      images: [
+        'img/C_ambi40.png', 
+  'img/S_ambi40.png', 
+  'img/H_ambi40.png',
+  'img/T_ambi40.png'
+      ],
     }
   timeline.push(preload);//preload图片
   
@@ -75,7 +81,14 @@ const jsPsych = initJsPsych({
     button_label: "继续",
     on_finish: function (data) {    
       info["ID"] = data.response.Q0;
+
+
+      word = permutation(texts, 3) //对应的文字
+      texts = word[parseInt(info["ID"]) % 6] //被试id除以6，求余数
       key = permutation(key, 2)[parseInt(info["ID"]) % 2] //对应的按键
+      let sort = Math.floor(Math.random()*texts.length);
+      texts.splice(sort, 0, T_text)
+      images.splice(sort, 0, T_image)
       view_texts_images = [] //指导语中呈现的图片和文字对应关系
       jsPsych.randomization.shuffle(images).forEach((v, i) => { /*将image随机，需要在随机分配三个对应关系后，练习试次开始前，载入缓冲刺激，如果只是加一个三角的image还需要preload吗*/
         view_texts_images.push(`<img src="${v}" width=150 style="vertical-align:middle">---${texts[images.indexOf(v)]}`); //image编号和文字对应，这里需要修改
@@ -135,39 +148,39 @@ const jsPsych = initJsPsych({
   timeline.push(information);
   
   
-  var chinrest = {
-    type: jsPsychVirtualChinrest,
-    blindspot_reps: 3,
-    resize_units: "deg",
-    pixels_per_unit: 50,
-    item_path:'img/card.png',
-    adjustment_prompt: function(){
-      let html = `<p style = "font-size: 28px">首先，我们将快速测量您的显示器上像素到厘米的转换比率。</p>`;
-      html += `<p style = "font-size: 28px">请您将拿出一张真实的银行卡放在屏幕上方，单击并拖动图像的右下角，直到它与屏幕上的信用卡大小相同。</p>`;
-      html += `<p style = "font-size: 28px">您可以使用与银行卡大小相同的任何卡,如会员卡或驾照,如果您无法使用真实的卡,可以使用直尺测量图像宽度至85.6毫米。</p>`;
-      html += `<p style = "font-size: 28px"> 如果对以上操作感到困惑，请参考这个视频： <a href='https://www.naodao.com/public/stim_calibrate.mp4' target='_blank' style='font-size:24px'>参考视频</a></p>`;
-      return html
-    },
-    blindspot_prompt: function(){
-      return `<p style="text-align:left">现在，我们将快速测量您和屏幕之间的距离：<br>
-      请把您的左手放在 空格键上<br>
-      请用右手遮住右眼<br>
-      请用您的左眼专注于黑色方块。将注意力集中在黑色方块上。<br>
-      如果您已经准备好了就按下 空格键 ，这时红色的球将从右向左移动，并将消失。当球一消失，就请再按空格键<br>
-      如果对以上操作感到困惑，请参考这个视频：<a href='https://www.naodao.com/public/stim_calibrate.mp4' target='_blank' style='font-size:24px'>参考视频</a><br>
-      <a style="text-align:center">准备开始时，请按空格键。</a></p>`
-    },
-    blindspot_measurements_prompt: `剩余测量次数：`,
-    on_finish: function(data){
-      console.log(data)
-    },
-    redo_measurement_button_label: `还不够接近，请重试`,
-    blindspot_done_prompt: `是的`,
-    adjustment_button_prompt: `图像大小对准后，请单击此处`,
-    viewing_distance_report: `<p>根据您的反应，您坐在离屏幕<span id='distance-estimate' style='font-weight: bold;'></span> 的位置。<br>这大概是对的吗？</p> `,
-  };
+  // var chinrest = {
+  //   type: jsPsychVirtualChinrest,
+  //   blindspot_reps: 3,
+  //   resize_units: "deg",
+  //   pixels_per_unit: 50,
+  //   item_path:'img/card.png',
+  //   adjustment_prompt: function(){
+  //     let html = `<p style = "font-size: 28px">首先，我们将快速测量您的显示器上像素到厘米的转换比率。</p>`;
+  //     html += `<p style = "font-size: 28px">请您将拿出一张真实的银行卡放在屏幕上方，单击并拖动图像的右下角，直到它与屏幕上的信用卡大小相同。</p>`;
+  //     html += `<p style = "font-size: 28px">您可以使用与银行卡大小相同的任何卡,如会员卡或驾照,如果您无法使用真实的卡,可以使用直尺测量图像宽度至85.6毫米。</p>`;
+  //     html += `<p style = "font-size: 28px"> 如果对以上操作感到困惑，请参考这个视频： <a href='https://www.naodao.com/public/stim_calibrate.mp4' target='_blank' style='font-size:24px'>参考视频</a></p>`;
+  //     return html
+  //   },
+  //   blindspot_prompt: function(){
+  //     return `<p style="text-align:left">现在，我们将快速测量您和屏幕之间的距离：<br>
+  //     请把您的左手放在 空格键上<br>
+  //     请用右手遮住右眼<br>
+  //     请用您的左眼专注于黑色方块。将注意力集中在黑色方块上。<br>
+  //     如果您已经准备好了就按下 空格键 ，这时红色的球将从右向左移动，并将消失。当球一消失，就请再按空格键<br>
+  //     如果对以上操作感到困惑，请参考这个视频：<a href='https://www.naodao.com/public/stim_calibrate.mp4' target='_blank' style='font-size:24px'>参考视频</a><br>
+  //     <a style="text-align:center">准备开始时，请按空格键。</a></p>`
+  //   },
+  //   blindspot_measurements_prompt: `剩余测量次数：`,
+  //   on_finish: function(data){
+  //     console.log(data)
+  //   },
+  //   redo_measurement_button_label: `还不够接近，请重试`,
+  //   blindspot_done_prompt: `是的`,
+  //   adjustment_button_prompt: `图像大小对准后，请单击此处`,
+  //   viewing_distance_report: `<p>根据您的反应，您坐在离屏幕<span id='distance-estimate' style='font-weight: bold;'></span> 的位置。<br>这大概是对的吗？</p> `,
+  // };
   
-  timeline.push(chinrest)
+  // timeline.push(chinrest)
   
   
   var fullscreen_trial = {
@@ -190,7 +203,7 @@ const jsPsych = initJsPsych({
     return r;
   }
 
-  var texts = ["好人", "常人", "坏人", "铅笔"]//储存文字
+  var texts = ["好人", "常人", "坏人"]//储存文字
   
   var key = ['f', 'j']//按键
   //正确率60%
@@ -277,7 +290,7 @@ const jsPsych = initJsPsych({
         }, 
        {
             obj_type:"image",
-            file: function(){return jsPsych.timelineVariable("Image")},
+            file: function(){return jsPsych.timelineVariable("Image")()},
             startX: "center", // location of the cross's center in the canvas
             startY: -175, 
             width: 190,  // 调整图片大小 视角：3.8° x 3.8°
@@ -309,7 +322,7 @@ const jsPsych = initJsPsych({
     on_finish: function(data){
         data.correct_response = jsPsych.timelineVariable("identify", true)();
         data.correct = data.correct_response == data.key_press;//0错1对
-        data.Image = jsPsych.timelineVariable("Image");
+        data.Image = jsPsych.timelineVariable("Image", true)();
         data.word = jsPsych.timelineVariable('word', true)();
         data.condition = "prac_simultaneous"
     }
@@ -344,22 +357,25 @@ const jsPsych = initJsPsych({
 ],
 
 timeline_variables:[
-  {Image:images[0], word:function(){return texts[0]}, identify:function(){return key[0]}},
-  {Image:images[1], word:function(){return texts[1]}, identify:function(){return key[0]}},
-  {Image:images[2], word:function(){return texts[2]}, identify:function(){return key[0]}},
-  {Image:images[3], word:function(){return texts[3]}, identify:function(){return key[0]}},
+  {Image:function(){return images[0]}, word:function(){return texts[0]}, identify:function(){return key[0]}},
+  {Image:function(){return images[1]}, word:function(){return texts[1]}, identify:function(){return key[0]}},
+  {Image:function(){return images[2]}, word:function(){return texts[2]}, identify:function(){return key[0]}},
+  {Image:function(){return images[3]}, word:function(){return texts[3]}, identify:function(){return key[0]}},
 
-  {Image:images[0], word:function(){return texts[1]}, identify:function(){return key[1]}},
-  {Image:images[1], word:function(){return texts[2]}, identify:function(){return key[1]}},
-  {Image:images[2], word:function(){return texts[0]}, identify:function(){return key[1]}},
+  // {Image:images[0], word:function(){return texts[1]}, identify:function(){return key[1]}},
+  // {Image:images[1], word:function(){return texts[2]}, identify:function(){return key[1]}},
+  // {Image:images[2], word:function(){return texts[0]}, identify:function(){return key[1]}},
+  // {Image:images[3], word:function(){return texts[1]}, identify:function(){return key[1]}},
 
-  {Image:images[0], word:function(){return texts[2]}, identify:function(){return key[1]}},
-  {Image:images[1], word:function(){return texts[0]}, identify:function(){return key[1]}},
-  {Image:images[2], word:function(){return texts[1]}, identify:function(){return key[1]}},
+  // {Image:images[0], word:function(){return texts[2]}, identify:function(){return key[1]}},
+  // {Image:images[1], word:function(){return texts[0]}, identify:function(){return key[1]}},
+  // {Image:images[2], word:function(){return texts[1]}, identify:function(){return key[1]}},
+  // {Image:images[3], word:function(){return texts[2]}, identify:function(){return key[1]}},
 
-  {Image:images[0], word:function(){return texts[0]}, identify:function(){return key[0]}},
-  {Image:images[1], word:function(){return texts[1]}, identify:function(){return key[0]}},
-  {Image:images[2], word:function(){return texts[2]}, identify:function(){return key[0]}},
+  // {Image:images[0], word:function(){return texts[0]}, identify:function(){return key[0]}},
+  // {Image:images[1], word:function(){return texts[1]}, identify:function(){return key[0]}},
+  // {Image:images[2], word:function(){return texts[2]}, identify:function(){return key[0]}},
+  // {Image:images[3], word:function(){return texts[3]}, identify:function(){return key[0]}},
 ],
 randomize_order:true,
 repetitions:2,//正是实验时改为6
