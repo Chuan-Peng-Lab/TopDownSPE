@@ -25,8 +25,8 @@ const jsPsych = initJsPsych({
   'img/S_ambi40.png', 
   'img/H_ambi40.png']; 
 
-  var T_image = 'img/T_ambi40.png'
-  var T_text = '铅笔'
+  var T_image = 'img/T_ambi40.png';
+  var T_text = '铅笔';
 
   var preload = {
       type: jsPsychPreload,
