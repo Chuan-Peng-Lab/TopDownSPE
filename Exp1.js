@@ -17,18 +17,18 @@ const jsPsych = initJsPsych({
   
   
   
-  const images = ['img/C_ambi40.png', 
+  var images = ['img/C_ambi40.png', 
   'img/S_ambi40.png', 
   'img/H_ambi40.png']; 
 
-  const images2 = ['img/C_ambi40.png', 
+  var images2 = ['img/C_ambi40.png', 
   'img/S_ambi40.png', 
   'img/H_ambi40.png']; 
 
-  const T_image = 'img/T_ambi40.png'
-  const T_text = '铅笔'
+  var T_image = 'img/T_ambi40.png'
+  var T_text = '铅笔'
 
-  const preload = {
+  var preload = {
       type: jsPsychPreload,
       images: [
         'img/C_ambi40.png', 
@@ -88,15 +88,16 @@ const jsPsych = initJsPsych({
 
 
       word = permutation(texts, 3) //对应的文字
-      texts = word[parseInt(info["ID"]) % 6] //被试id除以6，求余数
-      texts2 = texts
+      texts1 = word[parseInt(info["ID"]) % 6] //被试id除以6，求余数
+      texts2 = JSON.parse(JSON.stringify(texts1))
+      images2 = JSON.parse(JSON.stringify(images))
       key = permutation(key, 2)[parseInt(info["ID"]) % 2] //对应的按键
-      let sort = Math.floor(Math.random()*texts2.length);
+      let sort = Math.floor(Math.random()*texts1.length);
       texts2.splice(sort, 0, T_text)
       images2.splice(sort, 0, T_image)
       view_texts_images = [] //指导语中呈现的图片和文字对应关系
       jsPsych.randomization.shuffle(images).forEach((v, i) => { /*将image随机，需要在随机分配三个对应关系后，练习试次开始前，载入缓冲刺激，如果只是加一个三角的image还需要preload吗*/
-        view_texts_images.push(`<img src="${v}" width=150 style="vertical-align:middle">---${texts[images.indexOf(v)]}`); //image编号和文字对应，这里需要修改
+        view_texts_images.push(`<img src="${v}" width=150 style="vertical-align:middle">---${texts1[images.indexOf(v)]}`); //image编号和文字对应，这里需要修改
         console.log(view_texts_images) 
       })   
   
