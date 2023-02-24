@@ -24,6 +24,7 @@ const jsPsych = initJsPsych({
   const images2 = ['img/C_ambi40.png', 
   'img/S_ambi40.png', 
   'img/H_ambi40.png']; 
+
   const T_image = 'img/T_ambi40.png'
   const T_text = '铅笔'
 
@@ -88,6 +89,7 @@ const jsPsych = initJsPsych({
 
       word = permutation(texts, 3) //对应的文字
       texts = word[parseInt(info["ID"]) % 6] //被试id除以6，求余数
+      texts2 = texts
       key = permutation(key, 2)[parseInt(info["ID"]) % 2] //对应的按键
       let sort = Math.floor(Math.random()*texts2.length);
       texts2.splice(sort, 0, T_text)
@@ -207,7 +209,7 @@ const jsPsych = initJsPsych({
   }
 
   var texts = ["好人", "常人", "坏人"]//储存文字
-  var texts2 = texts
+
   var key = ['f', 'j']//按键
   //正确率60%
   let acc = 60;
