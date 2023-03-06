@@ -144,7 +144,7 @@ var welcome = {
   timeline.push(information);
   
   
- /* var chinrest = {
+  var chinrest = {
     type: jsPsychVirtualChinrest,
     blindspot_reps: 3,
     resize_units: "deg",
@@ -177,7 +177,7 @@ var welcome = {
   };
   
   timeline.push(chinrest)
-  */
+  
   
   var fullscreen_trial = {
       type: jsPsychFullscreen,
