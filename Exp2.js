@@ -284,9 +284,7 @@ var welcome = {
           obj_type: 'text',
           startX: "center",
           startY: "center", //图形和文字距离 与加号等距
-          content:texts /*function () {
-            return jsPsych.timelineVariable('word', true)();//记得后面要加括号
-          }*/,
+          content: texts,
           font: `${0}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
 
           text_color: 'white',
@@ -305,7 +303,7 @@ var welcome = {
             data.correct_response = jsPsych.timelineVariable("identify", true)();
             data.correct = data.correct_response == data.key_press;//0错1对
             data.Image = jsPsych.timelineVariable("Image",true)();
-            data.text = jsPsych.timelineVariable("word",true)();  //下面相应修改
+            data.text = jsPsych.timelineVariable("word");  //下面相应修改
             data.condition = "prac_self"
         }
     },
@@ -350,6 +348,7 @@ var welcome = {
             // $("body").css("cursor", "default"); //鼠标出现
         }
      }
+
      var feedback_p = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function () {
@@ -511,7 +510,7 @@ var welcome = {
                 data.correct_response = jsPsych.timelineVariable("identify", true)();
                 data.correct = data.correct_response == data.key_press;//0错1对
                 data.Image = jsPsych.timelineVariable("Image",true)();
-                data.text = jsPsych.timelineVariable("word",true)(); 
+                data.text = jsPsych.timelineVariable("word"); 
                 data.condition = "prac_friend"
             }
         },
@@ -713,7 +712,7 @@ var welcome = {
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
                     data.Image = jsPsych.timelineVariable("Image",true)();
-                    data.text = jsPsych.timelineVariable("word",true)(); 
+                    data.text = jsPsych.timelineVariable("word"); 
                     data.condition = "prac_stranger"
                 }
             },
@@ -918,7 +917,7 @@ var welcome = {
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
                     data.Image = jsPsych.timelineVariable("Image",true)();
-                    data.text = jsPsych.timelineVariable("word",true)(); 
+                    data.text = jsPsych.timelineVariable("word"); 
                     data.condition = "self"
                 }
             },
@@ -986,7 +985,7 @@ var welcome = {
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
                     data.Image = jsPsych.timelineVariable("Image");
-                   // data.word = jsPsych.timelineVariable("word", true)();
+                    data.word = jsPsych.timelineVariable("word");
                     data.condition = "friend"
                 }
             },
@@ -1055,7 +1054,7 @@ var welcome = {
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
                     data.Image = jsPsych.timelineVariable("Image",true)();
-                    data.text = jsPsych.timelineVariable("word",true)(); 
+                    data.text = jsPsych.timelineVariable("word"); 
                     data.condition = "stranger"
                 }
             },
