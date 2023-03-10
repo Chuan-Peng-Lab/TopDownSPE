@@ -78,9 +78,9 @@ var welcome = {
     button_label: "继续",
     on_finish: function (data) {    
       info["ID"] = data.response.Q0;
-      word = permutation(texts, 3) //对应的文字
-      texts = word[parseInt(info["ID"]) % 6] //被试id除以6，求余数
+     
       key = permutation(key, 2)[parseInt(info["ID"]) % 2] //对应的按键
+      images = permutation(images, 3)[parseInt(info["ID"]) % 6]
   
         view_texts_images = [] //指导语中呈现的图片和文字对应关系
         jsPsych.randomization.shuffle(images).forEach((v, i) => { //将image随机
@@ -222,8 +222,8 @@ var welcome = {
       });
       return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好，欢迎参加本实验。本次实验大约需要X分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习三种几何图形与文字标签的对应关系。</p>",
         start + `<div class="box">${tmpI}</div>` +
-        `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是在不同的要求下，判断屏幕中的几何图形是否为要求中的目标图形，</p><p class='footer' style='color:white; font-size: 25px;'>如果呈现图形为要求图形，请按<span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果所呈现图形不是要求图形，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
-        `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先完成三种要求下的练习试次。</p><p style='color:white; font-size: 25px; line-height: 30px;'>练习正确率达标后，您将完成每个条件下的4组匹配任务，每组包括60次按键反应，每组完成后会有休息时间。</p><p style='color:white; font-size: 22px; line-height: 25px;'>完成一组任务大约需要X分钟，整个实验将持续大约X分钟。</p>`,//实验时间待修改
+        `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是在不同的要求下，判断屏幕中的几何图形是否为要求中的目标图形，</p><p class='footer' style='color:white; font-size: 25px;'>如果呈现图形为要求图形，请按<span style="color: lightgreen; font-size:25px"> ${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果所呈现图形不是要求图形，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
+        `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先完成三种要求下的练习试次。</p><p style='color:white; font-size: 25px; line-height: 30px;'>练习正确率达标后，您将完成每个条件下的2组匹配任务，每组包括120次按键反应，每组完成后会有休息时间。</p><p style='color:white; font-size: 22px; line-height: 25px;'>完成一组任务大约需要X分钟，整个实验将持续大约X分钟。</p>`,//实验时间待修改
         middle + end];
     },
     show_clickable_nav: true,
@@ -271,7 +271,7 @@ var welcome = {
         }, 
         {
             obj_type:"image",
-            file: function(){return jsPsych.timelineVariable("Image")},
+            file: function(){return jsPsych.timelineVariable("Image",true)()},
             startX: "center", // location of the cross's center in the canvas
             startY: "center",
             width: 190,  // 调整图片大小 视角：3.8° x 3.8°
@@ -280,6 +280,21 @@ var welcome = {
             show_end_time: 1100,//出现50ms
             origin_center: true//待确定
         },//上一组end时间减去下一组show时间就是空屏的100ms
+        {
+          obj_type: 'text',
+          startX: "center",
+          startY: "center", //图形和文字距离 与加号等距
+          content:texts /*function () {
+            return jsPsych.timelineVariable('word', true)();//记得后面要加括号
+          }*/,
+          font: `${0}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+
+          text_color: 'white',
+          show_start_time: 1100, // ms after the start of the trial
+          show_end_time: 1100,//出现50ms
+          origin_center: true//带确定
+        }
+
         ],
 
         choices: ['f', 'j'],
@@ -289,7 +304,8 @@ var welcome = {
         on_finish: function(data){
             data.correct_response = jsPsych.timelineVariable("identify", true)();
             data.correct = data.correct_response == data.key_press;//0错1对
-            data.Image = jsPsych.timelineVariable("Image");
+            data.Image = jsPsych.timelineVariable("Image",true)();
+            data.text = jsPsych.timelineVariable("word",true)();  //下面相应修改
             data.condition = "prac_self"
         }
     },
@@ -300,7 +316,7 @@ var welcome = {
         type:jsPsychHtmlKeyboardResponse,
         stimulus:function(){
             let keypress = jsPsych.data.get().last(1).values()[0].key_press; // 被试按键
-              //let trial_keypress = jsPsych.data.get().last(1).values()[0].correct; //该trial正确的按键
+            //let trial_keypress = jsPsych.data.get().last(1).values()[0].correct; //该trial正确的按键
               let time = jsPsych.data.get().last(1).values()[0].rt;
               let trial_correct_response = jsPsych.data.get().last(1).values()[0].correct_response;//该trial正确的按键
               if (time > 1500 || time === null) { //大于1500或为null为过慢
@@ -322,9 +338,11 @@ var welcome = {
     }
     ],
         timeline_variables:[
-            {Image:images[0], identify:function(){return key[0]}},
-            {Image:images[1], identify:function(){return key[1]}},
-            {Image:images[2], identify:function(){return key[1]}},
+            {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[0]}},
+            {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[1]}},
+            {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[1]}},
+            {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[0]}},
+            
         ],
         randomize_order:true,
         repetitions:3,//正是实验时改为6
@@ -446,27 +464,43 @@ var welcome = {
         {
         type:jsPsychPsychophysics, 
         stimuli:[
-            {
-                obj_type: 'cross',
-                startX: "center", // location of the cross's center in the canvas
-                startY: "center",
-                line_length: 40,
-                line_width: 5,
-                line_color: 'white', // You can use the HTML color name instead of the HEX color.
-                show_start_time: 500,
-                show_end_time: 1000// ms after the start of the trial
-            }, 
-            {
-                obj_type:"image",
-                file: function(){return jsPsych.timelineVariable("Image")},
-                startX: "center", // location of the cross's center in the canvas
-                startY: "center",
-                width: 190,  // 调整图片大小 视角：3.8° x 3.8°
-                heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
-                show_start_time: 1000, // ms after the start of the trial
-                show_end_time: 1100,//出现50ms
-                origin_center: true//待确定
-            },//上一组end时间减去下一组show时间就是空屏的100ms
+          {
+            obj_type: 'cross',
+            startX: "center", // location of the cross's center in the canvas
+            startY: "center",
+            line_length: 40,
+            line_width: 5,
+            line_color: 'white', // You can use the HTML color name instead of the HEX color.
+            show_start_time: 500,
+            show_end_time: 1000// ms after the start of the trial
+        }, 
+        {
+            obj_type:"image",
+            file: function(){return jsPsych.timelineVariable("Image")()},
+            startX: "center", // location of the cross's center in the canvas
+            startY: "center",
+            width: 190,  // 调整图片大小 视角：3.8° x 3.8°
+            heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
+            show_start_time: 1000, // ms after the start of the trial
+            show_end_time: 1100,//出现50ms
+            origin_center: true//待确定
+        },//上一组end时间减去下一组show时间就是空屏的100ms
+        {
+          obj_type: 'text',
+          startX: "center",
+          startY: "center", //图形和文字距离 与加号等距
+          content:texts /*function () {
+            return jsPsych.timelineVariable('word', true)();//记得后面要加括号
+          }*/,
+          font: `${0}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+
+          text_color: 'white',
+          show_start_time: 1100, // ms after the start of the trial
+          show_end_time: 1100,//出现50ms
+          origin_center: true//带确定
+        }
+
+
             ],
     
             choices: ['f', 'j'],
@@ -476,7 +510,8 @@ var welcome = {
             on_finish: function(data){
                 data.correct_response = jsPsych.timelineVariable("identify", true)();
                 data.correct = data.correct_response == data.key_press;//0错1对
-                data.Image = jsPsych.timelineVariable("Image");
+                data.Image = jsPsych.timelineVariable("Image",true)();
+                data.text = jsPsych.timelineVariable("word",true)(); 
                 data.condition = "prac_friend"
             }
         },
@@ -509,9 +544,10 @@ var welcome = {
         }
         ],
             timeline_variables:[
-                {Image:images[0], identify:function(){return key[1]}},
-                {Image:images[1], identify:function(){return key[1]}},
-                {Image:images[2], identify:function(){return key[0]}},
+              {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[1]}},
+              {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[0]}},
+              {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[1]}},
+              {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[0]}},
             ],
             randomize_order:true,
             repetitions:3,//正是实验时改为6
@@ -644,7 +680,7 @@ var welcome = {
                 }, 
                 {
                     obj_type:"image",
-                    file: function(){return jsPsych.timelineVariable("Image")},
+                    file: function(){return jsPsych.timelineVariable("Image")()},
                     startX: "center", // location of the cross's center in the canvas
                     startY: "center",
                     width: 190,  // 调整图片大小 视角：3.8° x 3.8°
@@ -653,6 +689,20 @@ var welcome = {
                     show_end_time: 1100,//出现50ms
                     origin_center: true//待确定
                 },//上一组end时间减去下一组show时间就是空屏的100ms
+                {
+                  obj_type: 'text',
+                  startX: "center",
+                  startY: "center", //图形和文字距离 与加号等距
+                  content:texts /*function () {
+                    return jsPsych.timelineVariable('word', true)();//记得后面要加括号
+                  }*/,
+                  font: `${0}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+        
+                  text_color: 'white',
+                  show_start_time: 1100, // ms after the start of the trial
+                  show_end_time: 1100,//出现50ms
+                  origin_center: true//带确定
+                }
                 ],
         
                 choices: ['f', 'j'],
@@ -662,7 +712,8 @@ var welcome = {
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
-                    data.Image = jsPsych.timelineVariable("Image");
+                    data.Image = jsPsych.timelineVariable("Image",true)();
+                    data.text = jsPsych.timelineVariable("word",true)(); 
                     data.condition = "prac_stranger"
                 }
             },
@@ -695,9 +746,10 @@ var welcome = {
             }
             ],
                 timeline_variables:[
-                    {Image:images[0], identify:function(){return key[1]}},
-                    {Image:images[1], identify:function(){return key[0]}},
-                    {Image:images[2], identify:function(){return key[1]}},
+                  {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[1]}},
+                  {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[1]}},
+                  {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[0]}},
+                  {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[0]}},
                 ],
                 randomize_order:true,
                 repetitions:3,
@@ -830,10 +882,10 @@ var welcome = {
                     line_color: 'white', // You can use the HTML color name instead of the HEX color.
                     show_start_time: 500,
                     show_end_time: 1000// ms after the start of the trial
-                }, 
-                {
+                  }, 
+                  {
                     obj_type:"image",
-                    file: function(){return jsPsych.timelineVariable("Image")},
+                    file: function(){return jsPsych.timelineVariable("Image")()},
                     startX: "center", // location of the cross's center in the canvas
                     startY: "center",
                     width: 190,  // 调整图片大小 视角：3.8° x 3.8°
@@ -841,7 +893,21 @@ var welcome = {
                     show_start_time: 1000, // ms after the start of the trial
                     show_end_time: 1100,//出现50ms
                     origin_center: true//待确定
-                    },//上一组end时间减去下一组show时间就是空屏的100ms
+                  },//上一组end时间减去下一组show时间就是空屏的100ms
+                    {
+                      obj_type: 'text',
+                      startX: "center",
+                      startY: "center", //图形和文字距离 与加号等距
+                      content:texts /*function () {
+                        return jsPsych.timelineVariable('word', true)();//记得后面要加括号
+                      }*/,
+                      font: `${0}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+            
+                      text_color: 'white',
+                      show_start_time: 1100, // ms after the start of the trial
+                      show_end_time: 1100,//出现50ms
+                      origin_center: true//带确定
+                    }
                     ],
             
                 choices: ['f', 'j'],
@@ -851,19 +917,21 @@ var welcome = {
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
-                    data.Image = jsPsych.timelineVariable("Image");
+                    data.Image = jsPsych.timelineVariable("Image",true)();
+                    data.text = jsPsych.timelineVariable("word",true)(); 
                     data.condition = "self"
                 }
             },
             ],
             
             timeline_variables:[
-                {Image:images[0], identify:function(){return key[0]}},
-                {Image:images[1], identify:function(){return key[1]}},
-                {Image:images[2], identify:function(){return key[1]}},
+              {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[0]}},
+              {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[1]}},
+              {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[1]}},
+              {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[0]}},
             ],
                 randomize_order:true,
-                repetitions:20,//待修改
+                repetitions:24,//待修改
                 on_finish:function(){
                     // $("body").css("cursor", "default"); //鼠标出现
                 }
@@ -884,16 +952,30 @@ var welcome = {
                     show_end_time: 1000// ms after the start of the trial
                 }, 
                 {
-                    obj_type:"image",
-                    file: function(){return jsPsych.timelineVariable("Image")},
-                    startX: "center", // location of the cross's center in the canvas
-                    startY: "center",
-                    width: 190,  // 调整图片大小 视角：3.8° x 3.8°
-                    heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
-                    show_start_time: 1000, // ms after the start of the trial
-                    show_end_time: 1100,//出现50ms
-                    origin_center: true//待确定
-                    },//上一组end时间减去下一组show时间就是空屏的100ms
+                  obj_type:"image",
+                  file: function(){return jsPsych.timelineVariable("Image")()},
+                  startX: "center", // location of the cross's center in the canvas
+                  startY: "center",
+                  width: 190,  // 调整图片大小 视角：3.8° x 3.8°
+                  heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
+                  show_start_time: 1000, // ms after the start of the trial
+                  show_end_time: 1100,//出现50ms
+                  origin_center: true//待确定
+                },//上一组end时间减去下一组show时间就是空屏的100ms
+                    {
+                      obj_type: 'text',
+                      startX: "center",
+                      startY: "center", //图形和文字距离 与加号等距
+                      content:texts /*function () {
+                        return jsPsych.timelineVariable('word', true)();//记得后面要加括号
+                      }*/,
+                      font: `${0}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+            
+                      text_color: 'white',
+                      show_start_time: 1100, // ms after the start of the trial
+                      show_end_time: 1100,//出现50ms
+                      origin_center: true//带确定
+                    }
                     ],
             
                 choices: ['f', 'j'],
@@ -911,12 +993,13 @@ var welcome = {
             ],
             
             timeline_variables:[
-                {Image:images[0], identify:function(){return key[1]}},
-                {Image:images[1], identify:function(){return key[1]}},
-                {Image:images[2], identify:function(){return key[0]}},
+              {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[1]}},
+              {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[0]}},
+              {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[1]}},
+              {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[0]}},
             ],
                 randomize_order:true,
-                repetitions:20,//待修改
+                repetitions:24,//待修改
                 on_finish:function(){
                     // $("body").css("cursor", "default"); //鼠标出现
                 }
@@ -938,16 +1021,30 @@ var welcome = {
                     show_end_time: 1000// ms after the start of the trial
                 }, 
                 {
-                    obj_type:"image",
-                    file: function(){return jsPsych.timelineVariable("Image")},
-                    startX: "center", // location of the cross's center in the canvas
-                    startY: "center",
-                    width: 190,  // 调整图片大小 视角：3.8° x 3.8°
-                    heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
-                    show_start_time: 1000, // ms after the start of the trial
-                    show_end_time: 1100,//出现50ms
-                    origin_center: true//待确定
-                    },//上一组end时间减去下一组show时间就是空屏的100ms
+                  obj_type:"image",
+                  file: function(){return jsPsych.timelineVariable("Image")()},
+                  startX: "center", // location of the cross's center in the canvas
+                  startY: "center",
+                  width: 190,  // 调整图片大小 视角：3.8° x 3.8°
+                  heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
+                  show_start_time: 1000, // ms after the start of the trial
+                  show_end_time: 1100,//出现50ms
+                  origin_center: true//待确定
+                },//上一组end时间减去下一组show时间就是空屏的100ms
+                    {
+                      obj_type: 'text',
+                      startX: "center",
+                      startY: "center", //图形和文字距离 与加号等距
+                      content:texts /*function () {
+                        return jsPsych.timelineVariable('word', true)();//记得后面要加括号
+                      }*/,
+                      font: `${0}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+            
+                      text_color: 'white',
+                      show_start_time: 1100, // ms after the start of the trial
+                      show_end_time: 1100,//出现50ms
+                      origin_center: true//带确定
+                    }
                     ],
             
                 choices: ['f', 'j'],
@@ -957,20 +1054,21 @@ var welcome = {
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
-                    data.Image = jsPsych.timelineVariable("Image");
-                    //data.word = jsPsych.timelineVariable("word", true)();
+                    data.Image = jsPsych.timelineVariable("Image",true)();
+                    data.text = jsPsych.timelineVariable("word",true)(); 
                     data.condition = "stranger"
                 }
             },
             ],
             
             timeline_variables:[
-                {Image:images[0], identify:function(){return key[1]}},
-                {Image:images[1], identify:function(){return key[0]}},
-                {Image:images[2], identify:function(){return key[1]}},
+              {Image:function(){return images[0]}, word:texts[0],identify:function(){return key[1]}},
+              {Image:function(){return images[1]}, word:texts[1],identify:function(){return key[1]}},
+              {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[0]}},
+              {Image:function(){return images[2]}, word:texts[2],identify:function(){return key[0]}},
             ],
                 randomize_order:true,
-                repetitions:20,//待修改
+                repetitions:24,//待修改
                 on_finish:function(){
                     // $("body").css("cursor", "default"); //鼠标出现
                 }
@@ -983,7 +1081,7 @@ var welcome = {
                   // aaaaa = 1;  筛选，必须要！！！！！！！！！！！
                   let trials = jsPsych.data.get().filter(
                     [{ correct: true }, { correct: false }]
-                  ).last(60);// last()填入一个block里的trial总数
+                  ).last(96);// last()填入一个block里的trial总数
                   let correct_trials = trials.filter({
                     correct: true
                   });
@@ -999,7 +1097,7 @@ var welcome = {
                 }
               };
             
-              let blockTotalNum_self = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
+              //let blockTotalNum_self = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
               let rest_self = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1007,7 +1105,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                <p>您当前还剩余${blockTotalNum_self}组实验</p>
+                                
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1025,13 +1123,13 @@ var welcome = {
                 },
                 on_finish: function () {
                   $("body").css("cursor", "none"); //鼠标消失
-                  blockTotalNum_self -= 1;
+                  //blockTotalNum_self -= 1;
                   $(document.body).unbind();
                   clearInterval(parseInt(sessionStorage.getItem("tmpInter")));
                 }
               }
             
-            let blockTotalNum_friend = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
+            //let blockTotalNum_friend = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
             let rest_friend = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1039,7 +1137,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                <p>您当前还剩余${blockTotalNum_friend}组实验</p>
+                                
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1057,7 +1155,6 @@ var welcome = {
                 },
                 on_finish: function () {
                   $("body").css("cursor", "none"); //鼠标消失
-                  blockTotalNum_friend -= 1;
                   $(document.body).unbind();
                   clearInterval(parseInt(sessionStorage.getItem("tmpInter")));
                 }
@@ -1065,7 +1162,7 @@ var welcome = {
             
              
             
-            let blockTotalNum_stranger = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
+            //let blockTotalNum_stranger = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
             let rest_stranger = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1073,7 +1170,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                <p>您当前还剩余${blockTotalNum_stranger}组实验</p>
+                                
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1091,7 +1188,7 @@ var welcome = {
                 },
                 on_finish: function () {
                   $("body").css("cursor", "none"); //鼠标消失
-                  blockTotalNum_same -= 1;
+                  //blockTotalNum_stranger -= 1;
                   $(document.body).unbind();
                   clearInterval(parseInt(sessionStorage.getItem("tmpInter")));
                 }
@@ -1120,7 +1217,7 @@ var welcome = {
                   let p_stranger = {
                     type: jsPsychHtmlKeyboardResponse, 
                     stimulus: `
-                    <p>请您判断屏幕中的几何图形是否为与<span style='color: yellow;'>“他人”</span>匹配的图形</p>
+                    <p>请您判断屏幕中的几何图形是否为与<span style='color: yellow;'>“生人”</span>匹配的图形</p>
                     <p> <div style = "color: green"><按任意键开始></div></p>
                     `, 
                     choices: "ALL_KEYS",
@@ -1129,7 +1226,7 @@ var welcome = {
                 let cong_image = {
                     type: jsPsychHtmlKeyboardResponse, 
                     stimulus: `
-                    <p>恭喜您，正式实验中该要求下的任务已经完成。请您将食指放在对应按键上，准备好进入下一要求的任务</p>
+                    <p>恭喜您，本组实验已经完成。请您将食指放在对应按键上，准备好进入下一组任务</p>
                     <p> <div style = "color: green"><按任意键继续></div></p>
                     `, 
                     choices: "ALL_KEYS",
@@ -1139,7 +1236,7 @@ var welcome = {
                     p_self,
                     {
                         timeline: [self, feedback_block, rest_self],
-                        repetitions: 4 //4个block
+                        repetitions: 1 //4个block
                     },
                     cong_image
                 ];
@@ -1147,7 +1244,7 @@ var welcome = {
                     p_friend,
                     {
                         timeline: [friend, feedback_block, rest_friend],
-                        repetitions: 4 //4个block
+                        repetitions: 1 
                     },
                     cong_image
                 ];
@@ -1155,10 +1252,34 @@ var welcome = {
                     p_stranger,
                     {
                         timeline: [stranger, feedback_block, rest_stranger],
-                        repetitions: 4 //4个block
+                        repetitions: 1
                     },
                     cong_image
                 ];
+                var repeatblock4 = [
+                  p_stranger,
+                  {
+                      timeline: [stranger, feedback_block, rest_stranger],
+                      repetitions: 1
+                  },
+                  cong_image
+                ];
+              var repeatblock5 = [
+                p_friend,
+                {
+                    timeline: [friend, feedback_block, rest_friend],
+                    repetitions: 1 
+                },
+                cong_image
+              ];
+              var repeatblock6 = [
+                p_self,
+                {
+                    timeline: [self, feedback_block, rest_self],
+                    repetitions: 1
+                },
+                cong_image
+            ];
                 timeline.push({
                     timeline: [{
                         timeline: repeatblock1,
@@ -1175,10 +1296,26 @@ var welcome = {
                         conditional_function: () => {
                             return jsPsych.timelineVariable("a", true) == 3
                         }
-                    }],
+                    }, {
+                      timeline: repeatblock4,
+                      conditional_function: () => {
+                          return jsPsych.timelineVariable("a", true) == 4
+                      }
+                    }, {
+                      timeline: repeatblock5,
+                      conditional_function: () => {
+                          return jsPsych.timelineVariable("a", true) == 5
+                      }
+                    }, {
+                      timeline: repeatblock6,
+                      conditional_function: () => {
+                          return jsPsych.timelineVariable("a", true) == 6
+                      }
+                    }
+                    ],
                     timeline_variables: jsPsych.randomization.factorial({
                         a: jsPsych.randomization.shuffleNoRepeats(
-                            jsPsych.randomization.repeat([1,2,3], 1)
+                            jsPsych.randomization.repeat([1,2,3,4,5,6], 1)
                         )
                     })
                 });
