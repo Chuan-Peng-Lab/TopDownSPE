@@ -4,7 +4,7 @@ const jsPsych = initJsPsych({
        type: naodao,
      }*/
      on_finish: function() {
-      jsPsych.data.get().localSave('csv', 'exp1_' + info["ID"] + '.csv'); 
+      jsPsych.data.get().localSave('csv', 'exp1B_' + info["ID"] + '.csv'); 
       document.exitFullscreen(); // 退出全屏
       let bodyNode = document.getElementsByTagName("body"); // 获取Body窗体
             }
@@ -442,7 +442,7 @@ var feedback_goformal = {
   stimulus: function () {
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(14);
+    ).last(16);
     let correct_trials = trials.filter({
       correct: true
     });
@@ -515,7 +515,7 @@ let same =  {
       data.correct = data.correct_response == data.key_press;//0错1对
       data.Image = jsPsych.timelineVariable("Image", true)();
       data.word = jsPsych.timelineVariable('word', true)();
-      data.condition = "prac_simultaneous"//还需要data.condition?
+      data.condition = "same"
   }
 },
 {
@@ -569,7 +569,7 @@ timeline_variables:[
 {Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
 ],
 randomize_order:true,
-repetitions:3, //一个block里的试次数
+repetitions:6, //一个block里的试次数
 on_finish:function(){
   // $("body").css("cursor", "default"); //鼠标出现
 }
@@ -583,7 +583,7 @@ let feedback_block = {
     // aaaaa = 1;  筛选，必须要！！！！！！！！！！！
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(105);// last()填入一个block里的trial总数
+    ).last(96);// last()填入一个block里的trial总数
     let correct_trials = trials.filter({
       correct: true
     });
