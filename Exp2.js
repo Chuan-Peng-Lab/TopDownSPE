@@ -984,7 +984,7 @@ var welcome = {
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
-                    data.Image = jsPsych.timelineVariable("Image");
+                    data.Image = jsPsych.timelineVariable("Image",true)();
                     data.word = jsPsych.timelineVariable("word");
                     data.condition = "friend"
                 }
