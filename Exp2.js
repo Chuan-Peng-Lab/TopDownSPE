@@ -297,7 +297,7 @@ var welcome = {
 
         choices: ['f', 'j'],
         response_start_time:1000,//开始作答时间，第二个刺激开始计算
-        trial_duration:2100,//结束时间，一共作答时间持续1500ms
+        trial_duration:2500,//结束时间，一共作答时间持续1500ms
         data:function(){return jsPsych.timelineVariable("identify")},
         on_finish: function(data){
             data.correct_response = jsPsych.timelineVariable("identify", true)();
@@ -354,7 +354,7 @@ var welcome = {
         stimulus: function () {
           let trials = jsPsych.data.get().filter(
             [{ correct: true }, { correct: false }]
-          ).last(9); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+          ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
           //这里填入timeline_variables里面的trial数量  是否要乘repetition？
           let correct_trials = trials.filter({
             correct: true
@@ -401,7 +401,7 @@ var welcome = {
         conditional_function: function (data) {
           var trials = jsPsych.data.get().filter(
             [{ correct: true }, { correct: false }]
-          ).last(9);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+          ).last(12);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
           var correct_trials = trials.filter({
             correct: true
           });
@@ -421,7 +421,7 @@ var welcome = {
         loop_function: function () {
           var trials = jsPsych.data.get().filter(
             [{ correct: true }, { correct: false }]
-          ).last(9);//记得改，取数据
+          ).last(12);//记得改，取数据
           var correct_trials = trials.filter({
             correct: true
           });
@@ -504,7 +504,7 @@ var welcome = {
     
             choices: ['f', 'j'],
             response_start_time:1000,//开始作答时间，第二个刺激开始计算
-            trial_duration:2100,//结束时间，一共作答时间持续1500ms
+            trial_duration:2500,//结束时间，一共作答时间持续1500ms
             data:function(){return jsPsych.timelineVariable("identify")},
             on_finish: function(data){
                 data.correct_response = jsPsych.timelineVariable("identify", true)();
@@ -559,7 +559,7 @@ var welcome = {
             stimulus: function () {
               let trials = jsPsych.data.get().filter(
                 [{ correct: true }, { correct: false }]
-              ).last(6); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+              ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
               //这里填入timeline_variables里面的trial数量  是否要乘repetition？
               let correct_trials = trials.filter({
                 correct: true
@@ -606,7 +606,7 @@ var welcome = {
             conditional_function: function (data) {
               var trials = jsPsych.data.get().filter(
                 [{ correct: true }, { correct: false }]
-              ).last(9);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+              ).last(12);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
               var correct_trials = trials.filter({
                 correct: true
               });
@@ -626,7 +626,7 @@ var welcome = {
             loop_function: function () {
               var trials = jsPsych.data.get().filter(
                 [{ correct: true }, { correct: false }]
-              ).last(9);//记得改，取数据
+              ).last(12);//记得改，取数据
               var correct_trials = trials.filter({
                 correct: true
               });
@@ -706,7 +706,7 @@ var welcome = {
         
                 choices: ['f', 'j'],
                 response_start_time:1000,//开始作答时间，第二个刺激开始计算
-                trial_duration:2100,//结束时间，一共作答时间持续1500ms
+                trial_duration:2500,//结束时间，一共作答时间持续1500ms
                 data:function(){return jsPsych.timelineVariable("identify")},
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
@@ -761,7 +761,7 @@ var welcome = {
                 stimulus: function () {
                   let trials = jsPsych.data.get().filter(
                     [{ correct: true }, { correct: false }]
-                  ).last(9); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+                  ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
                   //这里填入timeline_variables里面的trial数量  是否要乘repetition？
                   let correct_trials = trials.filter({
                     correct: true
@@ -808,7 +808,7 @@ var welcome = {
                 conditional_function: function (data) {
                   var trials = jsPsych.data.get().filter(
                     [{ correct: true }, { correct: false }]
-                  ).last(9);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+                  ).last(12);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
                   var correct_trials = trials.filter({
                     correct: true
                   });
@@ -828,7 +828,7 @@ var welcome = {
                 loop_function: function () {
                   var trials = jsPsych.data.get().filter(
                     [{ correct: true }, { correct: false }]
-                  ).last(9);//记得改，取数据
+                  ).last(12);//记得改，取数据
                   var correct_trials = trials.filter({
                     correct: true
                   });
@@ -847,7 +847,7 @@ var welcome = {
                 stimulus: function () {
                   let trials = jsPsych.data.get().filter(
                     [{ correct: true }, { correct: false }]
-                  ).last(9);
+                  ).last(12);
                   let correct_trials = trials.filter({
                     correct: true
                   });
@@ -911,7 +911,7 @@ var welcome = {
             
                 choices: ['f', 'j'],
                 response_start_time:1100,//开始作答时间，第二个刺激开始计算
-                trial_duration:2200,//结束时间，一共作答时间持续1500ms
+                trial_duration:2500,//结束时间，一共作答时间持续1500ms
                 data:function(){return jsPsych.timelineVariable("identify")},
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
@@ -979,7 +979,7 @@ var welcome = {
             
                 choices: ['f', 'j'],
                 response_start_time:1100,//开始作答时间，第二个刺激开始计算
-                trial_duration:2200,//结束时间，一共作答时间持续1500ms
+                trial_duration:2500,//结束时间，一共作答时间持续1500ms
                 data:function(){return jsPsych.timelineVariable("identify")},
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
@@ -1048,7 +1048,7 @@ var welcome = {
             
                 choices: ['f', 'j'],
                 response_start_time:1100,//开始作答时间，第二个刺激开始计算
-                trial_duration:2200,//结束时间，一共作答时间持续1500ms
+                trial_duration:2500,//结束时间，一共作答时间持续1500ms
                 data:function(){return jsPsych.timelineVariable("identify")},
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();

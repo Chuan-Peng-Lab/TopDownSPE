@@ -265,7 +265,7 @@ const jsPsych = initJsPsych({
             width: 190,  // 调整图片大小 视角：3.8° x 3.8°
             heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
             show_start_time: 1000, // ms after the start of the trial
-            show_end_time: 1100,//出现50ms
+            show_end_time: 1100,
             origin_center: true
         },//上一组end时间减去下一组show时间就是空屏的100ms
         {
@@ -279,7 +279,7 @@ const jsPsych = initJsPsych({
             font: `${80}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
             text_color: 'white',
             show_start_time: 1000, // ms after the start of the trial
-            show_end_time: 1100,//出现50ms
+            show_end_time: 1100,
             origin_center: true
           }
         ],
@@ -293,7 +293,7 @@ const jsPsych = initJsPsych({
         data.correct = data.correct_response == data.key_press;//0错1对
         data.Image = jsPsych.timelineVariable("Image", true)();
         data.word = jsPsych.timelineVariable('word', true)();
-        data.condition = "prac_simultaneous"//还需要data.condition?
+        data.condition = "prac"
     }
 },
 {
@@ -361,7 +361,7 @@ var feedback_p = {
   stimulus: function () {
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(14); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+    ).last(16); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
     //这里填入timeline_variables里面的trial数量
     let correct_trials = trials.filter({
       correct: true
@@ -405,7 +405,7 @@ var if_node3 = { //if_node 用于判断是否呈现feedback，feedback_continue_
   conditional_function: function (data) {
     var trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(14);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+    ).last(16);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
     var correct_trials = trials.filter({
       correct: true
     });
@@ -423,7 +423,7 @@ var loop_node3 = {
   loop_function: function () {
     var trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(14);//记得改，取数据
+    ).last(16);//记得改，取数据
     var correct_trials = trials.filter({
       correct: true
     });

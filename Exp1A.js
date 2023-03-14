@@ -279,7 +279,7 @@ const jsPsych = initJsPsych({
             font: `${80}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
             text_color: 'white',
             show_start_time: 1000, // ms after the start of the trial
-            show_end_time: 1100,//出现50ms
+            show_end_time: 1100,
             origin_center: true
           }
         ],
@@ -361,7 +361,7 @@ var feedback_p = {
   stimulus: function () {
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(14); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+    ).last(16); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
     //这里填入timeline_variables里面的trial数量
     let correct_trials = trials.filter({
       correct: true
@@ -423,7 +423,7 @@ var loop_node3 = {
   loop_function: function () {
     var trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(14);//记得改，取数据
+    ).last(16);//记得改，取数据
     var correct_trials = trials.filter({
       correct: true
     });
@@ -442,7 +442,7 @@ var feedback_goformal = {
   stimulus: function () {
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(14);
+    ).last(16);
     let correct_trials = trials.filter({
       correct: true
     });
