@@ -575,7 +575,6 @@ on_finish:function(){
 }
 } 
 
-timeline.push(same);
 
 let feedback_block = {
   type: jsPsychHtmlKeyboardResponse,
@@ -600,7 +599,7 @@ let feedback_block = {
 };
 
 
-let blockTotalNum_same = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
+let blockTotalNum_same = 5;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
 let rest_same = {
   type:jsPsychHtmlButtonResponse,
   stimulus: function () {
@@ -635,7 +634,7 @@ let rest_same = {
   var repeatblock3 = [
     {
         timeline: [same, feedback_block, rest_same],
-        repetitions:4 
+        repetitions:6
     },
   
 ];
