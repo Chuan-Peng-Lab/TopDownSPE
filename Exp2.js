@@ -220,10 +220,10 @@ var welcome = {
       view_texts_images.forEach(v => {
         tmpI += `<p class="content">${v}</p>`;
       });
-      return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好，欢迎参加本实验。本次实验大约需要X分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习三种几何图形与文字标签的对应关系。</p>",
+      return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好，欢迎参加本实验。本次实验大约需要25分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习三种几何图形与文字标签的对应关系。</p>",
         start + `<div class="box">${tmpI}</div>` +
-        `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是在不同的要求下，判断屏幕中的几何图形是否为要求中的目标图形，</p><p class='footer' style='color:white; font-size: 25px;'>如果呈现图形为要求图形，请按<span style="color: lightgreen; font-size:25px"> ${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果所呈现图形不是要求图形，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
-        `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先完成三种要求下的练习试次。</p><p style='color:white; font-size: 25px; line-height: 30px;'>练习正确率达标后，您将完成每个条件下的2组匹配任务，每组包括120次按键反应，每组完成后会有休息时间。</p><p style='color:white; font-size: 22px; line-height: 25px;'>完成一组任务大约需要X分钟，整个实验将持续大约X分钟。</p>`,//实验时间待修改
+        `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是在不同的要求下，判断屏幕中的几何图形是否与要求中的文字标签匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果呈现图形与要求中的文字标签匹配，请按<span style="color: lightgreen; font-size:25px"> ${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果所呈现图形与要求中的文字标签不匹配，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
+        `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先完成三种要求下的练习试次。</p><p style='color:white; font-size: 25px; line-height: 30px;'>练习正确率达标后，您将完成6组匹配任务，每组包括96次按键反应，每组完成后会有休息时间。</p><p style='color:white; font-size: 22px; line-height: 25px;'>完成一组任务大约需要3分钟，整个实验将持续大约25分钟。</p>`,//实验时间待修改
         middle + end];
     },
     show_clickable_nav: true,
@@ -239,7 +239,7 @@ var welcome = {
           end = "<p style = 'font-size: 25px; line-height: 30px;'>如果您明白了规则：请点击 继续 </p><div>";
         return [
           start + 
-          `<p class='footer' style='font-size: 30px; line-height: 35px;'>请您判断屏幕中的几何图形是否为与“自我”匹配的图形，</p><p class='footer' style='color:white; font-size: 25px;'>如果 是 ，请按<span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果 不是 ，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`
+          `<p class='footer' style='font-size: 30px; line-height: 35px;'>请您判断屏幕中的几何图形是否与“自我”匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果 匹配 ，请按<span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果 不匹配 ，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`
           + end];
       },
     show_clickable_nav: true,
@@ -355,7 +355,7 @@ var welcome = {
           let trials = jsPsych.data.get().filter(
             [{ correct: true }, { correct: false }]
           ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
-          //这里填入timeline_variables里面的trial数量  是否要乘repetition？
+          //这里填入timeline_variables里面的trial数量
           let correct_trials = trials.filter({
             correct: true
           });
@@ -381,7 +381,7 @@ var welcome = {
         });
         return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
           start + `<div class="box">${tmpI}</div>` +
-          `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是在不同的要求下，判断屏幕中的几何图形是否为与“自我”对应的图形，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果是目标图形，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果不是目标图形，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+          `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断屏幕中的几何图形是否与“自我”匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果 匹配 ，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果 不匹配 ，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
           middle + end];
       },
       show_clickable_nav: true,
@@ -443,7 +443,7 @@ var welcome = {
             end = "<p style = 'font-size: 25px; line-height: 30px;'>如果您明白了规则：请点击 继续 </p><div>";
           return [
             start + 
-            `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是判断屏幕中的几何图形是否为与“朋友”匹配的图形，</p><p class='footer' style='color:white; font-size: 25px;'>如果 是 ，请按<span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果 不是 ，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`
+            `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是判断屏幕中的几何图形是否与“朋友”匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果 匹配 ，请按<span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果 不匹配 ，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`
             + end];
         },
         show_clickable_nav: true,
@@ -560,7 +560,7 @@ var welcome = {
               let trials = jsPsych.data.get().filter(
                 [{ correct: true }, { correct: false }]
               ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
-              //这里填入timeline_variables里面的trial数量  是否要乘repetition？
+              //这里填入timeline_variables里面的trial数量 
               let correct_trials = trials.filter({
                 correct: true
               });
@@ -586,7 +586,7 @@ var welcome = {
             });
             return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
               start + `<div class="box">${tmpI}</div>` +
-              `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是在不同的要求下，判断屏幕中的几何图形是否为与“朋友”对应的图形，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果是目标图形，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果不是目标图形，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+              `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断屏幕中的几何图形是否与“朋友”匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果 匹配 ，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果 不匹配 ，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
               middle + end];
           },
           show_clickable_nav: true,
@@ -647,7 +647,7 @@ var welcome = {
                 end = "<p style = 'font-size: 25px; line-height: 30px;'>如果您明白了规则：请点击 继续 </p><div>";
               return [
                 start + 
-                `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是判断屏幕中的几何图形是否为与“生人”匹配的图形，</p><p class='footer' style='color:white; font-size: 25px;'>如果 是 ，请按<span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果 不是 ，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`
+                `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是判断屏幕中的几何图形是否与“生人”匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果 匹配 ，请按<span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果 不匹配 ，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`
                 + end];
             },
             show_clickable_nav: true,
@@ -762,7 +762,7 @@ var welcome = {
                   let trials = jsPsych.data.get().filter(
                     [{ correct: true }, { correct: false }]
                   ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
-                  //这里填入timeline_variables里面的trial数量  是否要乘repetition？
+                  //这里填入timeline_variables里面的trial数量
                   let correct_trials = trials.filter({
                     correct: true
                   });
@@ -776,7 +776,7 @@ var welcome = {
             
             
             
-            var feedback_continue_practice1 = { //在这里呈现文字recap，让被试再记一下
+            var feedback_continue_practice3 = { //在这里呈现文字recap，让被试再记一下
               type: jsPsychInstructions,
               pages: function () {
                 let start = "<p class='header' style='font-size:25px; line-height:30px;'>请您努力记下如下匹配对应关系，再次进行练习。</p>",
@@ -788,7 +788,7 @@ var welcome = {
                 });
                 return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
                   start + `<div class="box">${tmpI}</div>` +
-                  `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是在不同的要求下，判断屏幕中的几何图形是否为与“生人”对应的图形，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果是目标图形，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果不是目标图形，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+                  `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断屏幕中的几何图形是否与“生人”匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果 匹配 ，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果 不匹配 ，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
                   middle + end];
               },
               show_clickable_nav: true,
@@ -847,7 +847,7 @@ var welcome = {
                 stimulus: function () {
                   let trials = jsPsych.data.get().filter(
                     [{ correct: true }, { correct: false }]
-                  ).last(12);
+                  ).last(12);  
                   let correct_trials = trials.filter({
                     correct: true
                   });
@@ -856,15 +856,15 @@ var welcome = {
                   return "<style>.context{color:white; font-size: 35px; line-height:40px}</style>\
                                         <div><p class='context'>您正确回答了" + accuracy + "% 的试次。</p>" +
                     "<p class='context'>您的平均反应时为" + rt + "毫秒。</p>" +
-                    "<p class='context'>恭喜您完成练习。按任意键进入正式实验。</p>" + 
-                    "<p class='footer' style='font-size: 35px; line-height:40px;'>请在进入正式实验实验之前将您的<span style='color: lightgreen;'>食指</span>放在电脑键盘的相应键位上进行按键。</p>"
+                    "<p class='context'>恭喜您完成练习。按任意键进入正式实验。正式试验将不再为您提供按键后的正误反馈，请您在看到图片后尽量又快又准地按键。</p>" + 
+                    "<p class='footer' style='font-size: 35px; line-height:40px;'>请在进入正式实验实验之前将您的<span style='color: lightgreen;'>食指</span>放在电脑键盘的相应键位上，做好按键准备。</p>"
                 },
                 on_finish: function () {
                   $("body").css("cursor", "none");
                 }
               }
               timeline.push(feedback_goformal);
-            //指导语1
+            
             
 
             let self = {
@@ -910,7 +910,7 @@ var welcome = {
                     ],
             
                 choices: ['f', 'j'],
-                response_start_time:1100,//开始作答时间，第二个刺激开始计算
+                response_start_time:1000,//开始作答时间，第二个刺激开始计算
                 trial_duration:2500,//结束时间，一共作答时间持续1500ms
                 data:function(){return jsPsych.timelineVariable("identify")},
                 on_finish: function(data){
@@ -978,14 +978,14 @@ var welcome = {
                     ],
             
                 choices: ['f', 'j'],
-                response_start_time:1100,//开始作答时间，第二个刺激开始计算
+                response_start_time:1000,//开始作答时间，第二个刺激开始计算
                 trial_duration:2500,//结束时间，一共作答时间持续1500ms
                 data:function(){return jsPsych.timelineVariable("identify")},
                 on_finish: function(data){
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0错1对
                     data.Image = jsPsych.timelineVariable("Image",true)();
-                    data.word = jsPsych.timelineVariable("word");
+                    data.text = jsPsych.timelineVariable("word");
                     data.condition = "friend"
                 }
             },
@@ -1047,7 +1047,7 @@ var welcome = {
                     ],
             
                 choices: ['f', 'j'],
-                response_start_time:1100,//开始作答时间，第二个刺激开始计算
+                response_start_time:1000,//开始作答时间，第二个刺激开始计算
                 trial_duration:2500,//结束时间，一共作答时间持续1500ms
                 data:function(){return jsPsych.timelineVariable("identify")},
                 on_finish: function(data){
@@ -1096,7 +1096,7 @@ var welcome = {
                 }
               };
             
-              //let blockTotalNum_self = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
+              let blockTotalNum = 5;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
               let rest_self = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1104,7 +1104,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                
+                                <p>您当前还剩余${blockTotalNum}组实验</p>
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1122,13 +1122,13 @@ var welcome = {
                 },
                 on_finish: function () {
                   $("body").css("cursor", "none"); //鼠标消失
-                  //blockTotalNum_self -= 1;
+                  blockTotalNum -= 1;
                   $(document.body).unbind();
                   clearInterval(parseInt(sessionStorage.getItem("tmpInter")));
                 }
               }
             
-            //let blockTotalNum_friend = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
+            
             let rest_friend = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1136,7 +1136,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                
+                                <p>您当前还剩余${blockTotalNum}组实验</p>
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1154,6 +1154,7 @@ var welcome = {
                 },
                 on_finish: function () {
                   $("body").css("cursor", "none"); //鼠标消失
+                  blockTotalNum -= 1;
                   $(document.body).unbind();
                   clearInterval(parseInt(sessionStorage.getItem("tmpInter")));
                 }
@@ -1161,7 +1162,7 @@ var welcome = {
             
              
             
-            //let blockTotalNum_stranger = 3;// 此处填入总block数量-1，比如总数量是3，那么值就需要是2
+            
             let rest_stranger = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1169,7 +1170,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                
+                                <p>您当前还剩余${blockTotalNum}组实验</p>
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1187,7 +1188,7 @@ var welcome = {
                 },
                 on_finish: function () {
                   $("body").css("cursor", "none"); //鼠标消失
-                  //blockTotalNum_stranger -= 1;
+                  blockTotalNum -= 1;
                   $(document.body).unbind();
                   clearInterval(parseInt(sessionStorage.getItem("tmpInter")));
                 }
@@ -1197,7 +1198,7 @@ var welcome = {
                 let p_self = {
                     type: jsPsychHtmlKeyboardResponse, 
                     stimulus: `
-                    <p>请您判断屏幕中的几何图形是否为与<span style='color: yellow;'>“自我”</span>匹配的图形</p>
+                    <p>请您判断屏幕中的几何图形是否与<span style='color: yellow;'>“自我”</span>匹配</p>
                     <p> <div style = "color: green"><按任意键开始></div></p>
                     `, 
                     choices: "ALL_KEYS",
@@ -1206,7 +1207,7 @@ var welcome = {
                   let p_friend = {
                     type: jsPsychHtmlKeyboardResponse, 
                     stimulus: `
-                    <p>请您判断屏幕中的几何图形是否为与<span style='color: yellow;'>“朋友”</span>匹配的图形</p>
+                    <p>请您判断屏幕中的几何图形是否与<span style='color: yellow;'>“朋友”</span>匹配</p>
                     <p> <div style = "color: green"><按任意键开始></div></p>
                     `, 
                     choices: "ALL_KEYS",
@@ -1216,7 +1217,7 @@ var welcome = {
                   let p_stranger = {
                     type: jsPsychHtmlKeyboardResponse, 
                     stimulus: `
-                    <p>请您判断屏幕中的几何图形是否为与<span style='color: yellow;'>“生人”</span>匹配的图形</p>
+                    <p>请您判断屏幕中的几何图形是否与<span style='color: yellow;'>“生人”</span>匹配</p>
                     <p> <div style = "color: green"><按任意键开始></div></p>
                     `, 
                     choices: "ALL_KEYS",
@@ -1225,7 +1226,7 @@ var welcome = {
                 let cong_image = {
                     type: jsPsychHtmlKeyboardResponse, 
                     stimulus: `
-                    <p>恭喜您，本组实验已经完成。请您将食指放在对应按键上，准备好进入下一组任务</p>
+                    <p>请您将食指放在对应按键上，准备好进入下一组任务</p>
                     <p> <div style = "color: green"><按任意键继续></div></p>
                     `, 
                     choices: "ALL_KEYS",
@@ -1267,7 +1268,7 @@ var welcome = {
                 p_friend,
                 {
                     timeline: [friend, feedback_block, rest_friend],
-                    repetitions: 1 
+                    repetitions: 1
                 },
                 cong_image
               ];
@@ -1329,7 +1330,7 @@ var welcome = {
         var finish = {
         type:jsPsychHtmlKeyboardResponse, 
         stimulus: `
-        <p>感谢您参加我们的实验，请<span style="color: yellow;">按任意键开始上传数据</span>，并通知研究者。</p>
+        <p>感谢您参加我们的实验，请<span style="color: yellow;">按任意键开始下载数据</span>，并通知研究者。</p>
         <p>感谢您的配合！</p>`,
         choices: "ALL_KEYS",
       };
