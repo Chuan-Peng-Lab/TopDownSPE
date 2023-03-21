@@ -22,7 +22,7 @@ const jsPsych = initJsPsych({
   'img/H_ambi40.png']; 
 
   var T_image = 'img/T_ambi40.png';
-  var T_text = '铅笔';
+  var T_text = 'をる';
 
   var preload = {
       type: jsPsychPreload,
@@ -208,8 +208,8 @@ const jsPsych = initJsPsych({
   var texts = ["自我", "朋友", "生人"]//储存文字
 
   var key = ['f', 'j']//按键
-  //正确率60%
-  let acc = 60;
+  //正确率70%
+  let acc = 70;
   let view_texts_images = [];
 
 
@@ -223,9 +223,9 @@ const jsPsych = initJsPsych({
       view_texts_images.forEach(v => {
         tmpI += `<p class="content">${v}</p>`;
       });
-      return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好,欢迎参加本实验。本次实验大约需要30分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习三种几何图形与不同标签的对应关系。</p>",
+      return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好,欢迎参加本实验。本次实验大约需要45分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习三种几何图形与不同标签的对应关系。</p>",
         start + `<div class="box">${tmpI}</div>` +
-        `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是判断几何图形与文字标签是否匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果二者 匹配 或是 出现了新的图形与标签，请按 <span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果二者 不匹配，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您左右手的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
+        `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是判断几何图形与文字标签是否匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果二者 不匹配，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果二者 匹配 或是 出现了新的图形与标签，请按 <span style="color: lightgreen; font-size:25px">${key[0]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您左右手的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
         `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先进入练习部分。<p style='color:white; font-size: 25px; line-height: 30px;'>完成练习之后,您将进入正式试验。正式试验分为4组,每组完成后会有休息时间。</p></span>`,
         middle + end];
     },
@@ -348,7 +348,7 @@ timeline_variables:[
 
 ],
 randomize_order:true,
-repetitions:1,//正是实验时改为6
+repetitions:2,//正是实验时改为6
 on_finish:function(){
     // $("body").css("cursor", "default"); //鼠标出现
 }
@@ -361,7 +361,7 @@ var feedback_p = {
   stimulus: function () {
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(16); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+    ).last(32); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
     //这里填入timeline_variables里面的trial数量
     let correct_trials = trials.filter({
       correct: true
@@ -386,7 +386,7 @@ var feedback_continue_practice3 = { //在这里呈现文字recap，让被试再�
     });
     return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
       start + `<div class="box">${tmpI}</div>` +
-      `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断几何图形与图形名称或文字标签是否匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果二者 匹配 或是 出现了新的图形与标签，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果二者 不匹配，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+      `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断几何图形与图形名称或文字标签是否匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果二者 不匹配，请按<span style="color: lightgreen;"> ${key[1]} 键</span></p><p class='footer' style='font-size:25px'>如果二者 匹配 或是 出现了新的图形与标签，请按 <span style="color: lightgreen;">${key[0]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
       middle + end];
   },
   show_clickable_nav: true,
@@ -405,7 +405,7 @@ var if_node3 = { //if_node 用于判断是否呈现feedback，feedback_continue_
   conditional_function: function (data) {
     var trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(16);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+    ).last(32);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
     var correct_trials = trials.filter({
       correct: true
     });
@@ -423,7 +423,7 @@ var loop_node3 = {
   loop_function: function () {
     var trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(16);//记得改，取数据
+    ).last(32);//记得改，取数据
     var correct_trials = trials.filter({
       correct: true
     });
@@ -442,7 +442,7 @@ var feedback_goformal = {
   stimulus: function () {
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(16);
+    ).last(32);
     let correct_trials = trials.filter({
       correct: true
     });
@@ -507,7 +507,7 @@ let same =  {
       ],
 
       choices: ['f', 'j'],
-  response_start_time:1000,//开始作答时间，第二个刺激开始计算
+  response_start_time:1000,
   trial_duration:2500,//结束时间，一共作答时间持续1500ms
   data:function(){return jsPsych.timelineVariable("identify")},
   on_finish: function(data){
@@ -551,22 +551,26 @@ timeline_variables:[
 {Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
 {Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
+
+{Image:function(){return images2[0]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
+{Image:function(){return images2[1]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
+{Image:function(){return images2[2]}, word:function(){return texts2[0]}, identify:function(){return key[1]}},
+
+{Image:function(){return images2[0]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
+{Image:function(){return images2[1]}, word:function(){return texts2[0]}, identify:function(){return key[1]}},
+{Image:function(){return images2[2]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
+
+{Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
+{Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
+{Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
+
+{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
+{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
 {Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
 
 {Image:function(){return images2[0]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
 {Image:function(){return images2[2]}, word:function(){return texts2[0]}, identify:function(){return key[1]}},
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
-
-{Image:function(){return images2[0]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
-{Image:function(){return images2[1]}, word:function(){return texts2[0]}, identify:function(){return key[1]}},
-{Image:function(){return images2[2]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
-
-{Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
-{Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
-{Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
 ],
 randomize_order:true,
 repetitions:6, //一个block里的试次数
@@ -582,7 +586,7 @@ let feedback_block = {
     // aaaaa = 1;  筛选，必须要！！！！！！！！！！！
     let trials = jsPsych.data.get().filter(
       [{ correct: true }, { correct: false }]
-    ).last(96);// last()填入一个block里的trial总数
+    ).last(108);// last()填入一个block里的trial总数
     let correct_trials = trials.filter({
       correct: true
     });
@@ -649,7 +653,7 @@ timeline.push({
 var finish = {
   type:jsPsychHtmlKeyboardResponse, 
   stimulus: `
-  <p>感谢您参加我们的实验，请<span style="color: yellow;">按任意键开始上传数据</span>，并通知研究者。</p>
+  <p>感谢您参加我们的实验，请<span style="color: yellow;">按任意键开始下载数据</span>，并通知研究者。</p>
   <p>感谢您的配合！</p>`,
   choices: "ALL_KEYS",
 };
