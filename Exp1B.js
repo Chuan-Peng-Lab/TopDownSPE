@@ -549,8 +549,15 @@ let same =  {
 
 timeline_variables:[
 {Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
+{Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
+{Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
 {Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
+{Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
+{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
+{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
+{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
+
 
 {Image:function(){return images2[0]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
@@ -559,14 +566,6 @@ timeline_variables:[
 {Image:function(){return images2[0]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[0]}, identify:function(){return key[1]}},
 {Image:function(){return images2[2]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
-
-{Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
-{Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
-{Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
-
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[0]}},
 
 {Image:function(){return images2[0]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
