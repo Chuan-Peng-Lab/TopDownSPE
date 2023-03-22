@@ -220,7 +220,7 @@ var welcome = {
       return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好，欢迎参加本实验。本次实验大约需要50分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习三种几何图形与文字标签的对应关系。</p>",
         start + `<div class="box">${tmpI}</div>` +
         `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是在三种要求下，判断屏幕中的几何图形与图形哪侧的文字标签匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果呈现图形与图形左侧的文字标签匹配，请按<span style="color: lightgreen; font-size:25px"> 'F' 键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果呈现图形与图形右侧的文字标签匹配，请按<span style="color: lightgreen; font-size:25px"> 'J' 键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
-        `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先完成三种要求下的练习试次。</p><p style='color:white; font-size: 25px; line-height: 30px;'>练习正确率达标后，您将完成三种要求下各4组匹配任务，每组包括  次按键反应，每组完成后会有休息时间。</p><p style='color:white; font-size: 22px; line-height: 25px;'>完成一组任务大约需要  分钟，整个实验将持续大约  分钟。</p>`,//实验时间待修改
+        `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先完成三种要求下的练习试次。</p><p style='color:white; font-size: 25px; line-height: 30px;'>练习正确率达标后，您将完成三种要求下各4组匹配任务，每组包括60次按键反应，每组完成后会有休息时间。</p><p style='color:white; font-size: 22px; line-height: 25px;'>完成一组任务大约需要2分钟，整个实验将持续大约50分钟。</p>`,//实验时间待修改
         middle + end];
     },
     show_clickable_nav: true,
@@ -599,7 +599,8 @@ var welcome = {
                 "<p class='context'>您的平均反应时为" + rt + "毫秒。</p>" +
                 "<p class='context'>恭喜您完成这一阶段的练习。按任意键进入<span style='color: yellow;'>与”朋友“匹配</span>的练习。</p></div>"+
                 "<p class='context'>任务要求："+
-                "<p class='context'>如果屏幕中图片与“朋友”匹配，请按<span style='color: yellow;'>与“朋友”同侧的按键</span>，如果与朋友不匹配，请按<span style='color: yellow;'>与“其他”同侧的按键";
+                "<p class='context'>如果屏幕中图片与“朋友”匹配，请按<span style='color: yellow;'>与“朋友”同侧的按键</span>"+
+                "<p class='context'>如果与朋友不匹配，请按<span style='color: yellow;'>与“其他”同侧的按键";
              },
          on_finish: function () {
              $("body").css("cursor", "none");
@@ -623,7 +624,7 @@ var welcome = {
             });
             return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
               start + `<div class="box">${tmpI}</div>` +
-              `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断屏幕中的几何图形是否与“朋友”匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果 匹配 ，请按 <span style="color: lightgreen;">${key[0]} 键</span></p><p class='footer' style='font-size:25px'>如果 不匹配 ，请按<span style="color: lightgreen;"> ${key[1]} 键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+              `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断屏幕中的几何图形是否与“朋友”匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果 匹配 ，请按 <span style="color: lightgreen;">与“朋友”同侧的按键</span></p><p class='footer' style='font-size:25px'>如果 不匹配 ，请按<span style="color: lightgreen;"> 与“其他”同侧的按键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
               middle + end];
           },
           show_clickable_nav: true,
@@ -819,7 +820,8 @@ var welcome = {
                     "<p class='context'>恭喜您完成这一阶段的练习。按任意键进入<span style='color: yellow;'>与“生人”匹配</span>的练习。</p></div>"
                     +
                 "<p class='context'>任务要求："+
-                "<p class='context'>如果屏幕中图片与“生人”匹配，请按<span style='color: yellow;'>与“生人”同侧的按键</span>，如果与”生人“不匹配，请按<span style='color: yellow;'>与“其他”同侧的按键";
+                "<p class='context'>如果屏幕中图片与“生人”匹配，请按<span style='color: yellow;'>与“生人”同侧的按键</span>"+
+                "<p class='context'>如果屏幕中图片与“生人”不匹配，请按<span style='color: yellow;'>与“其他”同侧的按键";
                   },
                  on_finish: function () {
                   $("body").css("cursor", "none");
@@ -842,7 +844,7 @@ var welcome = {
                 });
                 return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
                   start + `<div class="box">${tmpI}</div>` +
-                  `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断屏幕中的几何图形是否与“生人”匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果 匹配 ，请按 <span style="color: lightgreen;">与生人同侧的按键</span></p><p class='footer' style='font-size:25px'>如果 不匹配 ，请按<span style="color: lightgreen;"> 与“其他”同侧的按键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+                  `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断屏幕中的几何图形是否与“生人”匹配，</p><p class='footer' style='font-size:25px; line-height:30px;'>如果 匹配 ，请按 <span style="color: lightgreen;">与”生人“同侧的按键</span></p><p class='footer' style='font-size:25px'>如果 不匹配 ，请按<span style="color: lightgreen;"> 与“其他”同侧的按键</p></span><p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
                   middle + end];
               },
               show_clickable_nav: true,

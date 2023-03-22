@@ -223,7 +223,7 @@ const jsPsych = initJsPsych({
       view_texts_images.forEach(v => {
         tmpI += `<p class="content">${v}</p>`;
       });
-      return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好,欢迎参加本实验。本次实验大约需要45分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习几种几何图形与不同标签的对应关系。</p>",
+      return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好,欢迎参加本实验。本次实验大约需要50分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习几种几何图形与不同标签的对应关系。</p>",
         start + `<div class="box">${tmpI}</div>` +
         `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是判断几何图形与文字标签是否匹配，</p><p class='footer' style='color:white; font-size: 25px;'>如果二者匹配，请按 <span style="color: lightgreen; font-size:25px">${key[0]}键</span></p><p class='footer' style='color:white; font-size: 25px;'>如果二者不匹配或是出现了新的图形与标签，请按<span style="color: lightgreen; font-size:25px"> ${key[1]}键</p></span><p class='footer' style='color:white; font-size: 20px;'>请在实验过程中将您左右手的<span style="color: lightgreen;">食指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
         `<p style='color:white; font-size: 25px; line-height: 30px;'>您将首先进入练习部分。<p style='color:white; font-size: 25px; line-height: 30px;'>完成练习之后,您将进入正式试验。正式试验分为6组,每组完成后会有休息时间。</p></span>`,
