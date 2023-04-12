@@ -1,6 +1,6 @@
 const jsPsych = initJsPsych({
     on_finish: function() {
-     jsPsych.data.get().localSave('csv', 'exp2_' + info["ID"] + '.csv'); 
+     jsPsych.data.get().localSave('csv', 'exp2B_' + info["ID"] + '.csv'); 
      document.exitFullscreen(); 
      let bodyNode = document.getElementsByTagName("body"); 
            }
