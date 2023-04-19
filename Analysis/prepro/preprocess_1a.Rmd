@@ -16,7 +16,7 @@ df_raw <- list.files(file.path("../rawdata"), pattern = "exp1A_.*\\.csv$") %>%
   lapply(function(x) read.csv(file.path("../rawdata", x), header = TRUE)) %>%
     # 读取被试人口学信息
   lapply(function(df) mutate(df,subj_idx = as.numeric(jsonlite::fromJSON(response[5])$Q0), 
-          gender = jsonlite::fromJSON(response[6]),#
+          gender = jsonlite::fromJSON(response[6]),
           year = jsonlite::fromJSON(response[7])$Q0,
           education = jsonlite::fromJSON(response[8])$Q0,
           dist = view_dist_mm[9],
@@ -54,32 +54,74 @@ df <- df_raw %>%
         subj_idx %% 2 == 1 & correct_response == "f" ~ "mismatch", 
         subj_idx %% 2 == 0 & correct_response == "f" ~ "match",
         subj_idx %% 2 == 0 & correct_response == "j" ~ "mismatch"),
-    selfness = 
-      case_when(
-        word == '自我' ~ "selfness",
-        .default = as.character("others")
-      )) %>%
+    ACC = case_when(
+        correct == "false" ~ 0, 
+        correct == "true" ~ 1
+      )
+    ) %>%
   # 剔除无关变量
   select(-correct_response, 
          -key_press, 
-         -Image, 
-         -word,
+         #-Image, 
+         #-word,
          -trial_type)
 df
+```
+
+
+```{r}
+df.mismatch <- df %>%
+  dplyr::filter(matchness == "mismatch") 
+df.image1 <- df.mismatch %>%
+  filter(Image == "img/S_ambi40.png") %>%
+  select(word,subj_idx) 
+unique(df.image1)
+df.image2 <- df.mismatch %>%
+  dplyr::filter(image == "img/C_ambi40.png")
+df.image3 <- df.mismatch %>%
+  dplyr::filter(image == "img/H_ambi40.png")
+  
+
+```
+
+
+```{r}
+#正确率计算
+df_acc <- df %>%
+  dplyr::mutate(ACC = ifelse(ACC == 1,1,0)) %>%
+  dplyr::group_by(subj_idx,
+                  matchness,
+                  selfness)%>%
+  dplyr::summarise(
+    N = length(ACC),
+    countN = sum(ACC),
+    ACC = sum(ACC)/length(ACC)
+  )
+df_acc
+df_acc <- df_acc %>%
+  select(subj_idx,matchness,selfness,ACC)%>%
+  pivot_wider(names_from = c("selfness","matchness"),values_from = "ACC")
+
+write.csv(df_acc,file = "exp1a_acc.csv")
 ```
 # 描述性统计
 ```{r}
 df_desc <- df %>%
           select(everything())%>%
-          group_by(condition,
+          group_by(
                    matchness,
                    selfness,
-                   #subj_idx
+                   subj_idx
                    )%>%
           summarize(n = n(),
                     rt = mean(rt, na.rm = TRUE))%>%
           ungroup()
 df_desc
+df_desc %>% 
+  select(-n) %>% 
+pivot_wider(names_from = c("selfness", "matchness"), values_from = "rt") %>% 
+  write_csv("df.csv")
+
 ```
 # 方差分析
 ```{r}

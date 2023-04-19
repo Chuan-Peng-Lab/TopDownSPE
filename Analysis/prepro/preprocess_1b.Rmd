@@ -1,5 +1,5 @@
 ---
-title: "self-prioritization in same-fast effect 1a"
+title: "self-prioritization in same-fast effect 1b"
 output: html_notebook
 ---
 
@@ -10,21 +10,22 @@ library(ggplot2)
 ```
 
 读取数据并合并
+
 ```{r}
 df_raw <- list.files(file.path("../rawdata"), pattern = "exp1B_.*\\.csv$") %>%
   # 对读取到的所有.out文件x都执行函数read.table
   lapply(function(x) read.csv(file.path("../rawdata", x), header = TRUE)) %>%
     # 读取被试人口学信息
   lapply(function(df) mutate(df,subj_idx = as.numeric(jsonlite::fromJSON(response[5])$Q0), 
-          gender = jsonlite::fromJSON(response[6]),#
+          gender = jsonlite::fromJSON(response[6]),
           year = jsonlite::fromJSON(response[7])$Q0,
           education = jsonlite::fromJSON(response[8])$Q0,
           dist = view_dist_mm[9],
           rt = as.numeric(rt)))%>%
   bind_rows()
 ```
-
 # 数据预处理
+
 ```{r}
 df <- df_raw %>% 
 
@@ -45,8 +46,8 @@ df <- df_raw %>%
   # 选择试次
   dplyr::filter(trial_type == "psychophysics" & 
                 condition != "prac" & 
-                Image != "img/T_ambi40.png")%>% 
-  # 添加列：matchness, selfness
+                Image != "img/T_ambi40.png")%>%
+  # 添加列：matchness, selfness，ACC
   mutate(
     matchness =
       case_when(
@@ -58,30 +59,62 @@ df <- df_raw %>%
       case_when(
         word == '自我' ~ "selfness",
         .default = as.character("others")
+      ),
+    ACC = case_when(
+        correct == "false" ~ 0, 
+        correct == "true" ~ 1
       )) %>%
   # 剔除无关变量
   select(-correct_response, 
          -key_press, 
          -Image, 
          -word,
-         -trial_type)
+         -trial_type,
+         )
 df
 ```
+
+
+```{r}
+#正确率计算
+  df_acc <- df %>%
+  dplyr::mutate(ACC = ifelse(ACC == 1,1,0)) %>%
+  dplyr::group_by(subj_idx,
+                  matchness,
+                  selfness)%>%
+  dplyr::summarise(
+    N = length(ACC),
+    countN = sum(ACC),
+    ACC = sum(ACC) / length(ACC)
+  ) 
+  df_acc 
+  df_acc <- df_acc %>%
+    select(subj_idx,matchness,selfness,ACC) %>%
+    pivot_wider(names_from = c("selfness", "matchness"), values_from = "ACC")
+  
+#write.csv(df_acc,file = "df_acc.csv")
+```
+
 # 描述性统计
+
 ```{r}
 df_desc <- df %>%
           select(everything())%>%
-          group_by(condition,
+          group_by(subj_idx,
                    matchness,
-                   selfness,
-                   #subj_idx
-                   )%>%
+                   selfness)%>%
           summarize(n = n(),
                     rt = mean(rt, na.rm = TRUE))%>%
           ungroup()
 df_desc
+df_desc %>% 
+  select(-n) %>% 
+pivot_wider(names_from = c("selfness", "matchness"), values_from = "rt") %>% 
+write_csv("df2.csv")
 ```
+
 # 方差分析
+
 ```{r}
 model <- aov(rt ~ matchness * selfness, data = df)
 
@@ -90,4 +123,3 @@ summary(model)
 TukeyHSD(model, "matchness")
 TukeyHSD(model, "selfness")
 ```
-
