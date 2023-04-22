@@ -1,6 +1,6 @@
 const jsPsych = initJsPsych({
      on_finish: function() {
-      jsPsych.data.get().localSave('csv', 'exp2A_' + info["ID"] + '.csv'); 
+      jsPsych.data.get().localSave('csv', 'exp2_' + info["ID"] + '.csv'); 
       document.exitFullscreen(); 
       let bodyNode = document.getElementsByTagName("body"); 
             }
@@ -200,8 +200,8 @@ var welcome = {
   
   var texts = ["自我", "朋友", "生人"]//储存文字
   
-  var key_1 = ['k', 'j']//非目标图形对应按键
-  var key_2 = ['d', 'f']//目标图形对应按键
+  var key_1 = ['k', 'j']//目标图形对应按键
+  var key_2 = ['d', 'f']//非目标图形对应按键
   //正确率70%
   let acc = 70;
   let view_texts_images = [];
