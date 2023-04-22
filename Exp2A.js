@@ -202,7 +202,6 @@ var welcome = {
   
   var key_1 = ['k', 'j']//非目标图形对应按键
   var key_2 = ['d', 'f']//目标图形对应按键
-  var text  = ["自我", "朋友","生人"]
   //正确率70%
   let acc = 70;
   let view_texts_images = [];
@@ -237,11 +236,776 @@ var welcome = {
   }
   timeline.push(Instructions1);
 
+  var ins1free = {
+    type: jsPsychInstructions,
+    pages: function () {
+        let start = "<p class='header' style = 'font-size: 25px'>任务要求：</p>",
+          end = "<p style = 'font-size: 25px; line-height: 30px;'>本阶段为自由练习，帮助您学习任务规则。如果您明白了规则：请点击 继续 </p><div>";
+        return [
+          start + 
+          `<p class='footer' style='font-size: 30px; line-height: 35px;'>本阶段您需要重点关注与<span style="color: lightgreen; font-size:30px">“自我”对应的图形</span></p>
+          </p><p class='footer' style='color:white; font-size: 35px;'>如果出现的图形是与“自我”对应的图形 且 该图形与下方的文字标签匹配，请按<span style="color: lightgreen; font-size:35px">${key_1[0]}键</span></p><p class='footer' style='color:white; font-size: 35px;'>如果该图形与下方文字不匹配，请按<span style="color: lightgreen; font-size:35px">${key_1[1]}键</p></span>
+          </p><p class='footer' style='color:white; font-size: 35px;'>如果出现的图形不是“自我”对应的图形 且 该图形与下方的文字标签匹配，请按<span style="color: lightgreen; font-size:35px">${key_2[0]}键</span></p><p class='footer' style='color:white; font-size: 35px;'>如果该图形与下方文字不匹配，请按<span style="color: lightgreen; font-size:35px">${key_2[1]}键</p></span>
+          <p class='footer' style='color:white; font-size: 30px;'>请在实验过程中将您的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上准备按键。</p></span>`
+          + end];
+      },
+    show_clickable_nav: true,
+    button_label_previous: " <span class='add_' style='color:black; font-size: 20px;'> 返回</span>",
+    button_label_next: " <span class='add_' style='color:black; font-size: 20px;'> 继续</span>",
+    on_load: () => {
+      $("body").css("cursor", "default");
+    },
+    on_finish: function () {
+      $("body").css("cursor", "none");
+    } //鼠标消失术，放在要消失鼠标的前一个事件里
+  }
+  timeline.push(ins1free);
+
+  let freeprac_1 = {
+    timeline:[
+    {
+    type:jsPsychPsychophysics, 
+    stimuli:[
+        {
+            obj_type: 'cross',
+            startX: "center", // location of the cross's center in the canvas
+            startY: "center",
+            line_length: 40,
+            line_width: 5,
+            line_color: 'white', // You can use the HTML color name instead of the HEX color.
+            show_start_time: 500,
+            show_end_time: 1000// ms after the start of the trial
+        }, 
+        {
+            obj_type:"image",
+            file: function(){return jsPsych.timelineVariable("Image")()},
+            startX: "center", // location of the cross's center in the canvas
+            startY: -175,
+            width: 190,  // 调整图片大小 视角：3.8° x 3.8°
+            heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
+            show_start_time: 1000, // ms after the start of the trial
+            show_end_time: 1100,
+            origin_center: true
+        },//上一组end时间减去下一组show时间就是空屏的100ms
+        {
+          obj_type: 'text',
+          file: function(){return jsPsych.timelineVariable("word")},
+          startX: "center",
+          startY: 175, //图形和文字距离 与加号等距2度
+          content: function () {
+            return jsPsych.timelineVariable('word', true)();
+          },
+          font: `${80}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+          text_color: 'white',
+          show_start_time: 1000, // ms after the start of the trial
+          show_end_time: 1100,
+          origin_center: true
+        }
+        
+        ],
+
+        choices: ['f', 'j','d','k'],
+        response_start_time:1000,//开始作答时间，第二个刺激开始计算
+        trial_duration:25000,//结束时间，一共作答时间持续1500ms
+        data:function(){return jsPsych.timelineVariable("identify")},
+        on_finish: function(data){
+            data.correct_response = jsPsych.timelineVariable("identify", true)();
+            data.correct = data.correct_response == data.key_press;//0对1错
+            data.Image = jsPsych.timelineVariable("Image",true)();
+            data.text = jsPsych.timelineVariable("word",true)();  
+            data.condition = "freeprac_self"
+        }
+    },
+    {
+        data:{
+            screen_id: "feedback_test"//这里为反馈
+        },
+        type:jsPsychHtmlKeyboardResponse,
+        stimulus:function(){
+            let keypress = jsPsych.data.get().last(1).values()[0].key_press; // 被试按键
+            //let trial_keypress = jsPsych.data.get().last(1).values()[0].correct; //该trial正确的按键
+              let time = jsPsych.data.get().last(1).values()[0].rt;
+              let trial_correct_response = jsPsych.data.get().last(1).values()[0].correct_response;//该trial正确的按键
+                if (keypress == trial_correct_response) { //如果按键 == 正确按键
+                  return "<span style='color:GreenYellow; font-size: 70px;'>正确! </span>"
+                }
+                else {
+                  return "<span style='color:red; font-size: 70px;'>错误! </span>"
+                }
+        },
+    
+        choices:"NO_KEYS",
+        trial_duration:300,//300ms反馈
+    }
+    ], 
+    timeline_variables:[
+      {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
+        if (myMap.get(images[0]) === "自我"){
+          return key_1[0];
+        } else return key_2[0];
+      }},
+      {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
+        if (myMap.get(images[0]) === "自我"){
+          return key_1[0];
+        } else return key_2[0];
+      }},
+      {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
+        if (myMap.get(images[0]) === "自我"){
+          return key_1[1];
+        } else return key_2[1]; 
+      }},
+      {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
+        if (myMap.get(images[0]) === "自我"){
+          return key_1[1];
+        } else return key_2[1];
+      }},
+      {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
+        if (myMap.get(images[1]) === "自我"){
+          return key_1[1];
+        } else return key_2[1];
+      }},
+      {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
+        if (myMap.get(images[1]) === "自我"){
+          return key_1[0];
+        } else return key_2[0];
+      }},
+      {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
+        if (myMap.get(images[1]) === "自我"){
+          return key_1[0];
+        } else return key_2[0];
+      }},
+      {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
+        if (myMap.get(images[1]) === "自我"){
+          return key_1[1];
+        } else return key_2[1];
+      }},
+      {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
+        if (myMap.get(images[2]) === "自我"){
+          return key_1[1];
+        } else return key_2[1];
+      }},
+      {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
+        if (myMap.get(images[2]) === "自我"){
+          return key_1[1];
+        } else return key_2[1];
+      }},
+      {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
+        if (myMap.get(images[2]) === "自我"){
+          return key_1[0];
+        } else return key_2[0];
+      }},
+      {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
+        if (myMap.get(images[2]) === "自我"){
+          return key_1[0];
+        } else return key_2[0];
+      }},
+      
+     
+    ],
+        randomize_order:true,
+        repetitions:2,
+        on_finish:function(){
+            // $("body").css("cursor", "default"); //鼠标出现
+        }
+     }
+    
+     var feedback_p = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function () {
+        let trials = jsPsych.data.get().filter(
+          [{ correct: true }, { correct: false }]
+        ).last(24); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+        //这里填入timeline_variables里面的trial数量
+        let correct_trials = trials.filter({
+          correct: true
+        });
+        let accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+        let rt = Math.round(correct_trials.select('rt').mean());
+        return "<style>.context{color:white; font-size: 35px; line-height:40px}</style>\
+                              <div><p class='context'>您正确回答了" + accuracy + "% 的试次。</p>" +
+          "<p class='context'>您的平均反应时为" + rt + "毫秒。</p>";
+      }
+    }
+    
+    var feedback_continue_freepractice1 = { //在这里呈现文字recap，让被试再记一下
+      type: jsPsychInstructions,
+      pages: function () {
+        let start = "<p class='header' style='font-size:25px; line-height:30px;'>请您努力记下如下匹配对应关系，再次进行练习。</p>",
+          middle = "<p class='footer' style='font-size:25px; line-height:30px;'>如果对本实验还有不清楚之处，请立即向实验员咨询。</p>",
+          end = "<p style='font-size:25px; line-height:30px;'>如果您明白了规则：</p><p style='font-size:22px; line-height:25px;'>请按 继续 进入练习</p><div>";
+        let tmpI = "";
+        view_texts_images.forEach(v => {
+          tmpI += `<p class="content" style='font-size:25px'>${v}</p>`;
+        });
+        return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
+          start + `<div class="box">${tmpI}</div>` +
+          `<p class='footer' style='font-size:25px; line-height:35px;'>您的任务是判断图形是否与文字标签匹配。
+          <p class='footer' style='font-size:35px; line-height:30px;'>对于与“自我”对应的图形：如果 匹配 ，请按 <span style="color: lightgreen;">${key_1[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_1[1]}键</p></span>
+          <p class='footer' style='font-size:35px; line-height:30px;'>对于非“自我”对应的图形，如果 匹配 ，请按 <span style="color: lightgreen;">${key_2[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_2[1]}键</p></span>
+          <p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+          middle + end];
+      },
+      show_clickable_nav: true,
+      button_label_previous: " <span class='add_' style='color:black; font-size: 20px;'> 返回</span>",
+      button_label_next: " <span class='add_' style='color:black; font-size: 20px;'> 继续</span>",
+      on_finish: function () {
+        $("body").css("cursor", "none");
+      },
+      on_load: () => {
+        $("body").css("cursor", "default");
+      }
+    }
+
+    
+    
+    var freeif_node1 = { //if_node 用于判断是否呈现feedback，feedback_continue_practice
+        timeline: [feedback_p, feedback_continue_freepractice1],
+        conditional_function: function (data) {
+          var trials = jsPsych.data.get().filter(
+            [{ correct: true }, { correct: false }]
+          ).last(24);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+          var correct_trials = trials.filter({
+            correct: true
+          });
+          var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+          if (accuracy >= acc) {
+            return false;//达标就skip掉feedback_continue_practice这一段
+          } else if (accuracy < acc) { //没达标反馈feedback,feedback_continue_practice
+            return true;
+          }
+        }
+      }
+    
+      
+    
+      var freeloop_node1 = {
+        timeline: [freeprac_1, freeif_node1],
+        loop_function: function () {
+          var trials = jsPsych.data.get().filter(
+            [{ correct: true }, { correct: false }]
+          ).last(24);//记得改，取数据
+          var correct_trials = trials.filter({
+            correct: true
+          });
+          var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+          if (accuracy >= acc) {
+            return false;//end 进入正式实验前的反馈
+          } else if (accuracy < acc) { // repeat
+            return true;
+          }
+        }
+      }
+      timeline.push(freeloop_node1);
+
+      let freeprac_2 = {
+        timeline:[
+          {
+            type:jsPsychPsychophysics, 
+            stimuli:[
+                {
+                    obj_type: 'cross',
+                    startX: "center", // location of the cross's center in the canvas
+                    startY: "center",
+                    line_length: 40,
+                    line_width: 5,
+                    line_color: 'white', // You can use the HTML color name instead of the HEX color.
+                    show_start_time: 500,
+                    show_end_time: 1000// ms after the start of the trial
+                }, 
+                {
+                    obj_type:"image",
+                    file: function(){return jsPsych.timelineVariable("Image",true)()},
+                    startX: "center", // location of the cross's center in the canvas
+                    startY: -175,
+                    width: 190,  // 调整图片大小 视角：3.8° x 3.8°
+                    heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
+                    show_start_time: 1000, // ms after the start of the trial
+                    show_end_time: 1100,
+                    origin_center: true//待确定
+                },//上一组end时间减去下一组show时间就是空屏的100ms
+                
+                {
+                  obj_type: 'text',
+                  file: function(){return jsPsych.timelineVariable("word")},
+                  startX: "center",
+                  startY: 175, //图形和文字距离 与加号等距2度
+                  content: function () {
+                    return jsPsych.timelineVariable('word', true)();
+                  },
+                  font: `${80}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+                  text_color: 'white',
+                  show_start_time: 1000, // ms after the start of the trial
+                  show_end_time: 1100,
+                  origin_center: true
+                },
+                
+                
+                ],
+        
+                choices: ['f', 'j','d','k'],
+                response_start_time:1000,//开始作答时间，第二个刺激开始计算
+                trial_duration:25000,//结束时间，一共作答时间持续1500ms
+                data:function(){return jsPsych.timelineVariable("identify")},
+                on_finish: function(data){
+                    data.correct_response = jsPsych.timelineVariable("identify", true)();
+                    data.correct = data.correct_response == data.key_press;//0错1对
+                    data.Image = jsPsych.timelineVariable("Image",true)();
+                    data.text = jsPsych.timelineVariable("word",true)();  
+                    data.condition = "freeprac_friend"
+                }
+            },
+            {
+                data:{
+                    screen_id: "feedback_test"//这里为反馈
+                },
+                type:jsPsychHtmlKeyboardResponse,
+                stimulus:function(){
+                    let keypress = jsPsych.data.get().last(1).values()[0].key_press; // 被试按键
+                      let time = jsPsych.data.get().last(1).values()[0].rt;
+                      let trial_correct_response = jsPsych.data.get().last(1).values()[0].correct_response;//该trial正确的按键
+                    
+                        if (keypress == trial_correct_response) { //如果按键 == 正确按键
+                          return "<span style='color:GreenYellow; font-size: 70px;'>正确! </span>"
+                        }
+                        else {
+                          return "<span style='color:red; font-size: 70px;'>错误! </span>"
+                        }
+                      
+                },
+            
+                choices:"NO_KEYS",
+                trial_duration:300,//300ms反馈
+            },
+        
+        ],
+        timeline_variables:[
+          {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
+            if (myMap.get(images[0]) === "朋友"){
+              return key_1[0];
+            } else return key_2[0];
+          }},
+          {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
+            if (myMap.get(images[0]) === "朋友"){
+              return key_1[0];
+            } else return key_2[0];
+          }},
+          {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
+            if (myMap.get(images[0]) === "朋友"){
+              return key_1[1];
+            } else return key_2[1]; 
+          }},
+          {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
+            if (myMap.get(images[0]) === "朋友"){
+              return key_1[1];
+            } else return key_2[1];
+          }},
+          {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
+            if (myMap.get(images[1]) === "朋友"){
+              return key_1[1];
+            } else return key_2[1];
+          }},
+          {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
+            if (myMap.get(images[1]) === "朋友"){
+              return key_1[0];
+            } else return key_2[0];
+          }},
+          {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
+            if (myMap.get(images[1]) === "朋友"){
+              return key_1[0];
+            } else return key_2[0];
+          }},
+          {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
+            if (myMap.get(images[1]) === "朋友"){
+              return key_1[1];
+            } else return key_2[1];
+          }},
+          {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
+            if (myMap.get(images[2]) === "朋友"){
+              return key_1[1];
+            } else return key_2[1];
+          }},
+          {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
+            if (myMap.get(images[2]) === "朋友"){
+              return key_1[1];
+            } else return key_2[1];
+          }},
+          {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
+            if (myMap.get(images[2]) === "朋友"){
+              return key_1[0];
+            } else return key_2[0];
+          }},
+          {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
+            if (myMap.get(images[2]) === "朋友"){
+              return key_1[0];
+            } else return key_2[0];
+          }},
+          
+         
+        ],
+            randomize_order:true,
+            repetitions:2,//正是实验时改为6
+            on_finish:function(){
+                // $("body").css("cursor", "default"); //鼠标出现
+            }
+         }
+         var feedback_gop = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: function () {
+              let trials = jsPsych.data.get().filter(
+                [{ correct: true }, { correct: false }]
+              ).last(24); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+              //这里填入timeline_variables里面的trial数量 
+              let correct_trials = trials.filter({
+                correct: true
+              });
+              let accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+              let rt = Math.round(correct_trials.select('rt').mean());
+              return  [ "<style>.context{color:white; font-size: 35px; line-height:40px}</style>\
+              <div><p class='context'>您正确回答了" + accuracy + "% 的试次。</p>" +
+              "<p class='context'>您的平均反应时为" + rt + "毫秒。</p>" +
+              "<p class='context'>恭喜您完成这一阶段的练习。按任意键进入<span style='color: yellow;'>重点关注图形为“朋友”</span>的练习。</p></div>"+
+              `<p class='footer' style='font-size:35px; line-height:30px;'>任务要求：
+              <p class='footer' style='font-size:35px; line-height:35px;'>对于与“朋友”对应的图形：如果 匹配 ，请按 <span style="color: lightgreen;">${key_1[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_1[1]}键</p></span>
+              <p class='footer' style='font-size:35px; line-height:35px;'>对于非“朋友”对应的图形：如果 匹配 ，请按 <span style="color: lightgreen;">${key_2[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_2[1]}键</p></span>
+              <p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+              ];
+              
+             },
+         on_finish: function () {
+             $("body").css("cursor", "none");
+             }
+          }
+          timeline.push(feedback_gop);
+        
+         
+        
+        
+        
+        var feedback_continue_freepractice2 = { //在这里呈现文字recap，让被试再记一下
+          type: jsPsychInstructions,
+          pages: function () {
+            let start = "<p class='header' style='font-size:25px; line-height:30px;'>请您努力记下如下匹配对应关系，再次进行练习。</p>",
+              middle = "<p class='footer' style='font-size:25px; line-height:30px;'>如果对本实验还有不清楚之处，请立即向实验员咨询。</p>",
+              end = "<p style='font-size:25px; line-height:30px;'>如果您明白了规则：</p><p style='font-size:22px; line-height:25px;'>请按 继续 进入练习</p><div>";
+            let tmpI = "";
+            view_texts_images.forEach(v => {
+              tmpI += `<p class="content" style='font-size:25px'>${v}</p>`;
+            });
+            return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
+              start + `<div class="box">${tmpI}</div>` +
+              `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断图形是否与文字标签匹配。</p></span>
+              <p class='footer' style='font-size:35px; line-height:35px;'>对于“朋友”对应的图形：如果 匹配 ，请按 <span style="color: lightgreen;">${key_1[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_1[1]}键</p></span>
+              <p class='footer' style='font-size:35px; line-height:35px;'>对于非“朋友”对应的图形：如果 匹配 ，请按 <span style="color: lightgreen;">${key_2[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_2[1]}键</p></span>
+              <p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+              middle + end];
+          },
+          show_clickable_nav: true,
+          button_label_previous: " <span class='add_' style='color:black; font-size: 20px;'> 返回</span>",
+          button_label_next: " <span class='add_' style='color:black; font-size: 20px;'> 继续</span>",
+          on_finish: function () {
+            $("body").css("cursor", "none");
+          },
+          on_load: () => {
+            $("body").css("cursor", "default");
+          }
+        }
+        
+        
+        var freeif_node2 = { //if_node 用于判断是否呈现feedback，feedback_continue_practice
+            timeline: [feedback_p, feedback_continue_freepractice2],
+            conditional_function: function (data) {
+              var trials = jsPsych.data.get().filter(
+                [{ correct: true }, { correct: false }]
+              ).last(24);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+              var correct_trials = trials.filter({
+                correct: true
+              });
+              var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+              if (accuracy >= acc) {
+                return false;//达标就skip掉feedback_continue_practice这一段
+              } else if (accuracy < acc) { //没达标反馈feedback,feedback_continue_practice
+                return true;
+              }
+            }
+          }
+        
+        
+        
+          var freeloop_node2 = {
+            timeline: [freeprac_2, freeif_node2],
+            loop_function: function () {
+              var trials = jsPsych.data.get().filter(
+                [{ correct: true }, { correct: false }]
+              ).last(24);//记得改，取数据
+              var correct_trials = trials.filter({
+                correct: true
+              });
+              var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+              if (accuracy >= acc) {
+                return false;//end 进入正式实验前的反馈
+              } else if (accuracy < acc) { // repeat
+                return true;
+              }
+            }
+          }
+          timeline.push(freeloop_node2);
+
+          let freeprac_3 = {
+            timeline:[
+            {
+            type:jsPsychPsychophysics, 
+            stimuli:[
+              {
+                obj_type: 'cross',
+                startX: "center", // location of the cross's center in the canvas
+                startY: "center",
+                line_length: 40,
+                line_width: 5,
+                line_color: 'white', // You can use the HTML color name instead of the HEX color.
+                show_start_time: 500,
+                show_end_time: 1000// ms after the start of the trial
+            }, 
+            {
+                obj_type:"image",
+                file: function(){return jsPsych.timelineVariable("Image",true)()},
+                startX: "center", // location of the cross's center in the canvas
+                startY: -175,
+                width: 190,  // 调整图片大小 视角：3.8° x 3.8°
+                heigth: 190, // 调整图片大小 视角：3.8° x 3.8°
+                show_start_time: 1000, // ms after the start of the trial
+                show_end_time: 1100,
+                origin_center: true//待确定
+            },//上一组end时间减去下一组show时间就是空屏的100ms
+            
+            {
+              obj_type: 'text',
+              file: function(){return jsPsych.timelineVariable("word")},
+              startX: "center",
+              startY: 175, //图形和文字距离 与加号等距2度
+              content: function () {
+                return jsPsych.timelineVariable('word', true)();
+              },
+              font: `${80}px 'Arial'`, //字体和颜色设置 文字视角：3.6° x 1.6°
+              text_color: 'white',
+              show_start_time: 1000, // ms after the start of the trial
+              show_end_time: 1100,
+              origin_center: true
+            },
+            
+            
+            ],
+    
+            choices: ['f', 'j','d','k'],
+                response_start_time:1000,//开始作答时间，第二个刺激开始计算
+                trial_duration:25000,//结束时间，一共作答时间持续1500ms
+                data:function(){return jsPsych.timelineVariable("identify")},
+                on_finish: function(data){
+                    data.correct_response = jsPsych.timelineVariable("identify", true)();
+                    data.correct = data.correct_response == data.key_press;
+                    data.Image = jsPsych.timelineVariable("Image",true)();
+                    data.text = jsPsych.timelineVariable("word",true)(); 
+                    data.condition = "freeprac_stranger"
+                }
+            },
+            {
+                data:{
+                    screen_id: "feedback_test"//这里为反馈
+                },
+                type:jsPsychHtmlKeyboardResponse,
+                stimulus:function(){
+                    let keypress = jsPsych.data.get().last(1).values()[0].key_press; // 被试按键
+                      //let trial_keypress = jsPsych.data.get().last(1).values()[0].correct; //该trial正确的按键
+                      let time = jsPsych.data.get().last(1).values()[0].rt;
+                      let trial_correct_response = jsPsych.data.get().last(1).values()[0].correct_response;//该trial正确的按键
+                        if (keypress == trial_correct_response) { //如果按键 == 正确按键
+                          return "<span style='color:GreenYellow; font-size: 70px;'>正确! </span>"
+                        }
+                        else {
+                          return "<span style='color:red; font-size: 70px;'>错误! </span>"
+                        }
+                  
+                },
+            
+                choices:"NO_KEYS",
+                trial_duration:300,//300ms反馈
+            }
+            ],
+            timeline_variables:[
+              {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
+                if (myMap.get(images[0]) === "生人"){
+                  return key_1[0];
+                } else return key_2[0];
+              }},
+              {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
+                if (myMap.get(images[0]) === "生人"){
+                  return key_1[0];
+                } else return key_2[0];
+              }},
+              {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
+                if (myMap.get(images[0]) === "生人"){
+                  return key_1[1];
+                } else return key_2[1]; 
+              }},
+              {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
+                if (myMap.get(images[0]) === "生人"){
+                  return key_1[1];
+                } else return key_2[1];
+              }},
+              {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
+                if (myMap.get(images[1]) === "生人"){
+                  return key_1[1];
+                } else return key_2[1];
+              }},
+              {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
+                if (myMap.get(images[1]) === "生人"){
+                  return key_1[0];
+                } else return key_2[0];
+              }},
+              {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
+                if (myMap.get(images[1]) === "生人"){
+                  return key_1[0];
+                } else return key_2[0];
+              }},
+              {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
+                if (myMap.get(images[1]) === "生人"){
+                  return key_1[1];
+                } else return key_2[1];
+              }},
+              {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
+                if (myMap.get(images[2]) === "生人"){
+                  return key_1[1];
+                } else return key_2[1];
+              }},
+              {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
+                if (myMap.get(images[2]) === "生人"){
+                  return key_1[1];
+                } else return key_2[1];
+              }},
+              {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
+                if (myMap.get(images[2]) === "生人"){
+                  return key_1[0];
+                } else return key_2[0];
+              }},
+              {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
+                if (myMap.get(images[2]) === "生人"){
+                  return key_1[0];
+                } else return key_2[0];
+              }},
+              
+             
+            ],
+                randomize_order:true,
+                repetitions:2,
+                on_finish:function(){
+                    // $("body").css("cursor", "default"); //鼠标出现
+                }
+             }
+             var feedback_gos = {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: function () {
+                  let trials = jsPsych.data.get().filter(
+                    [{ correct: true }, { correct: false }]
+                  ).last(24); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+                  //这里填入timeline_variables里面的trial数量
+                  let correct_trials = trials.filter({
+                    correct: true
+                  });
+                  let accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+                  let rt = Math.round(correct_trials.select('rt').mean());
+                  return  [ "<style>.context{color:white; font-size: 35px; line-height:40px}</style>\
+                  <div><p class='context'>您正确回答了" + accuracy + "% 的试次。</p>" +
+                  "<p class='context'>您的平均反应时为" + rt + "毫秒。</p>" +
+                  "<p class='context'>恭喜您完成这一阶段的练习。按任意键进入<span style='color: yellow;'>重点关注图形为“生人”</span>的练习。</p></div>"+
+                  `<p class='footer' style='font-size:35px; line-height:30px;'>任务要求：
+                  <p class='footer' style='font-size:35px; line-height:35px;'>对与“生人”对应的图形，如果 匹配 ，请按 <span style="color: lightgreen;">${key_1[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_1[1]}键</p></span>
+                  <p class='footer' style='font-size:35px; line-height:35px;'>对非“生人”对应的图形，如果 匹配 ，请按 <span style="color: lightgreen;">${key_2[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_2[1]}键</p></span>
+                  <p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+                  ];
+                  },
+                 on_finish: function () {
+                  $("body").css("cursor", "none");
+                  }
+               }
+               timeline.push(feedback_gos);
+                
+            
+            
+            
+            var feedback_continue_freepractice3 = { //在这里呈现文字recap，让被试再记一下
+              type: jsPsychInstructions,
+              pages: function () {
+                let start = "<p class='header' style='font-size:25px; line-height:30px;'>请您努力记下如下匹配对应关系，再次进行练习。</p>",
+                  middle = "<p class='footer' style='font-size:25px; line-height:30px;'>如果对本实验还有不清楚之处，请立即向实验员咨询。</p>",
+                  end = "<p style='font-size:25px; line-height:30px;'>如果您明白了规则：</p><p style='font-size:22px; line-height:25px;'>请按 继续 进入练习</p><div>";
+                let tmpI = "";
+                view_texts_images.forEach(v => {
+                  tmpI += `<p class="content" style='font-size:25px'>${v}</p>`;
+                });
+                return ["<p class='header' style='font-size:25px; line-height:30px;'>您的正确率未达到进入下一阶段练习的要求。</p>",
+                  start + `<div class="box">${tmpI}</div>` +
+                  `<p class='footer' style='font-size:25px; line-height:30px;'>您的任务是判断图形是否与文字标签匹配。
+                  <p class='footer' style='font-size:35px; line-height:35px;'>对于与“生人”对应的图形：如果 匹配 ，请按 <span style="color: lightgreen;">${key_1[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_1[1]}键</p></span>
+                  <p class='footer' style='font-size:35px; line-height:35px;'>对于与“生人”对应的图形：如果 匹配 ，请按 <span style="color: lightgreen;">${key_2[0]}键</span></p><p class='footer' style='font-size:35px'>如果 不匹配 ，请按<span style="color: lightgreen;">${key_2[1]}键</p></span>
+                  <p class='footer' style='font-size:22px; line-height:25px;'>请在实验过程中将您的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上进行按键。</p></span>`,
+                  middle + end];
+              },
+              show_clickable_nav: true,
+              button_label_previous: " <span class='add_' style='color:black; font-size: 20px;'> 返回</span>",
+              button_label_next: " <span class='add_' style='color:black; font-size: 20px;'> 继续</span>",
+              on_finish: function () {
+                $("body").css("cursor", "none");
+              },
+              on_load: () => {
+                $("body").css("cursor", "default");
+              }
+            }
+            
+            
+            var freeif_node3 = { //if_node 用于判断是否呈现feedback，feedback_continue_practice
+                timeline: [feedback_p, feedback_continue_practice3],
+                conditional_function: function (data) {
+                  var trials = jsPsych.data.get().filter(
+                    [{ correct: true }, { correct: false }]
+                  ).last(24);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+                  var correct_trials = trials.filter({
+                    correct: true
+                  });
+                  var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+                  if (accuracy >= acc) {
+                    return false;//达标就skip掉feedback_continue_practice这一段
+                  } else if (accuracy < acc) { //没达标反馈feedback,feedback_continue_practice
+                    return true;
+                  }
+                }
+              }
+            
+            
+            
+              var freeloop_node3 = {
+                timeline: [freeprac_3, freeif_node3],
+                loop_function: function () {
+                  var trials = jsPsych.data.get().filter(
+                    [{ correct: true }, { correct: false }]
+                  ).last(24);//记得改，取数据
+                  var correct_trials = trials.filter({
+                    correct: true
+                  });
+                  var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+                  if (accuracy >= acc) {
+                    return false;//end 进入正式实验前的反馈
+                  } else if (accuracy < acc) { // repeat
+                    return true;
+                  }
+                }
+              }
+              timeline.push(freeloop_node3);
+
+
   var ins1 = {
     type: jsPsychInstructions,
     pages: function () {
         let start = "<p class='header' style = 'font-size: 25px'>任务要求：</p>",
-          end = "<p style = 'font-size: 25px; line-height: 30px;'>如果您明白了规则：请点击 继续 </p><div>";
+          end = "<p style = 'font-size: 25px; line-height: 30px;'>本阶段为正式练习，需要您在1.5s内尽量快速且准确地作出按键反应。如果您明白了规则：请点击 继续 </p><div>";
         return [
           start + 
           `<p class='footer' style='font-size: 30px; line-height: 35px;'>本阶段您需要重点关注与<span style="color: lightgreen; font-size:30px">“自我”对应的图形</span></p>
@@ -315,6 +1079,7 @@ var welcome = {
             data.correct = data.correct_response == data.key_press;//0对1错
             data.Image = jsPsych.timelineVariable("Image",true)();
             data.text = jsPsych.timelineVariable("word",true)();  
+            data.label = jsPsych.timelineVariable('label', true)();
             data.condition = "prac_self"
         }
     },
@@ -351,62 +1116,64 @@ var welcome = {
         if (myMap.get(images[0]) === "自我"){
           return key_1[0];
         } else return key_2[0];
-      }},
+      }, label:function(){return texts[0]}},
       {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
         if (myMap.get(images[0]) === "自我"){
           return key_1[0];
         } else return key_2[0];
-      }},
+      }, label:function(){return texts[0]}},
       {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
         if (myMap.get(images[0]) === "自我"){
           return key_1[1];
         } else return key_2[1]; 
-      }},
+      }, label:function(){return texts[0]}},
       {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
         if (myMap.get(images[0]) === "自我"){
           return key_1[1];
         } else return key_2[1];
-      }},
+      }, label:function(){return texts[0]}},
+
       {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
         if (myMap.get(images[1]) === "自我"){
           return key_1[1];
         } else return key_2[1];
-      }},
+      }, label:function(){return texts[1]}},
       {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
         if (myMap.get(images[1]) === "自我"){
           return key_1[0];
         } else return key_2[0];
-      }},
+      }, label:function(){return texts[1]}},
       {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
         if (myMap.get(images[1]) === "自我"){
           return key_1[0];
         } else return key_2[0];
-      }},
+      }, label:function(){return texts[1]}},
       {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
         if (myMap.get(images[1]) === "自我"){
           return key_1[1];
         } else return key_2[1];
-      }},
+      }, label:function(){return texts[1]}},
+
       {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
         if (myMap.get(images[2]) === "自我"){
           return key_1[1];
         } else return key_2[1];
-      }},
+      }, label:function(){return texts[2]}},
       {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
         if (myMap.get(images[2]) === "自我"){
           return key_1[1];
         } else return key_2[1];
-      }},
+      }, label:function(){return texts[2]}},
       {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
         if (myMap.get(images[2]) === "自我"){
           return key_1[0];
         } else return key_2[0];
-      }},
+      }, label:function(){return texts[2]}},
       {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
         if (myMap.get(images[2]) === "自我"){
           return key_1[0];
         } else return key_2[0];
-      }},
+      }, label:function(){return texts[2]}},
       
      
     ],
@@ -559,6 +1326,7 @@ var welcome = {
                     data.correct = data.correct_response == data.key_press;//0错1对
                     data.Image = jsPsych.timelineVariable("Image",true)();
                     data.text = jsPsych.timelineVariable("word",true)();  
+                    data.label = jsPsych.timelineVariable('label', true)();
                     data.condition = "prac_friend"
                 }
             },
@@ -596,62 +1364,64 @@ var welcome = {
             if (myMap.get(images[0]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[0]}},
           {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
             if (myMap.get(images[0]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[0]}},
           {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
             if (myMap.get(images[0]) === "朋友"){
               return key_1[1];
             } else return key_2[1]; 
-          },},
+          },label:function(){return texts[0]}},
           {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[0]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[0]}},
+
           {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[1]}},
           {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[1]}},
           {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[1]}},
           {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[1]}},
+
           {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[2]}},
           {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[2]}},
           {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[2]}},
           {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[2]}},
           
          
         ],
@@ -816,7 +1586,8 @@ var welcome = {
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;
                     data.Image = jsPsych.timelineVariable("Image",true)();
-                    data.text = jsPsych.timelineVariable("word",true)(); 
+                    data.text = jsPsych.timelineVariable("word",true)();
+                    data.label = jsPsych.timelineVariable('label', true)(); 
                     data.condition = "prac_stranger"
                 }
             },
@@ -853,62 +1624,64 @@ var welcome = {
                 if (myMap.get(images[0]) === "生人"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[0]}},
               {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
                 if (myMap.get(images[0]) === "生人"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[0]}},
               {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
                 if (myMap.get(images[0]) === "生人"){
                   return key_1[1];
                 } else return key_2[1]; 
-              },},
+              },label:function(){return texts[0]}},
               {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[0]) === "生人"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[0]}},
+
               {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
                 if (myMap.get(images[1]) === "生人"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[1]}},
               {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
                 if (myMap.get(images[1]) === "生人"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[1]}},
               {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
                 if (myMap.get(images[1]) === "生人"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[1]}},
               {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[1]) === "生人"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[1]}},
+
               {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
                 if (myMap.get(images[2]) === "生人"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[2]}},
               {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
                 if (myMap.get(images[2]) === "生人"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[2]}},
               {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[2]) === "生人"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[2]}},
               {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[2]) === "生人"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[2]}},
               
              
             ],
@@ -1032,7 +1805,7 @@ var welcome = {
                   return ["<style>.context{color:white; font-size: 35px; line-height:40px}</style>\
                                         <div><p class='context'>您正确回答了" + accuracy + "% 的试次。</p>" +
                     "<p class='context'>您的平均反应时为" + rt + "毫秒。</p>" +
-                    "<p class='context'>恭喜您完成练习。按任意键进入正式实验。</p>" + 
+                    "<p class='context'>恭喜您完成练习。您可以在此时休息一段时间，准备好后按任意键进入正式实验。</p>" + 
                     "<p class='footer' style='font-size: 35px; line-height:40px;'>请在进入正式实验实验之前将您的<span style='color: lightgreen;'>食指和中指</span>放在电脑键盘的相应键位上，做好按键准备。</p>",
                     ];
           },
@@ -1094,7 +1867,8 @@ var welcome = {
                     data.correct_response = jsPsych.timelineVariable("identify", true)();
                     data.correct = data.correct_response == data.key_press;//0对1错
                     data.Image = jsPsych.timelineVariable("Image",true)();
-                    data.text = jsPsych.timelineVariable("word",true)();  
+                    data.text = jsPsych.timelineVariable("word",true)(); 
+                    data.label = jsPsych.timelineVariable('label', true)();  
                     data.condition = "self"
                 }
             },
@@ -1131,62 +1905,64 @@ var welcome = {
                 if (myMap.get(images[0]) === "自我"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[0]}},
               {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
                 if (myMap.get(images[0]) === "自我"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[0]}},
               {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
                 if (myMap.get(images[0]) === "自我"){
                   return key_1[1];
                 } else return key_2[1]; 
-              },},
+              },label:function(){return texts[0]}},
               {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[0]) === "自我"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[0]}},
+
               {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
                 if (myMap.get(images[1]) === "自我"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[1]}},
               {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
                 if (myMap.get(images[1]) === "自我"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[1]}},
               {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
                 if (myMap.get(images[1]) === "自我"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[1]}},
               {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[1]) === "自我"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[1]}},
+
               {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
                 if (myMap.get(images[2]) === "自我"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[2]}},
               {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
                 if (myMap.get(images[2]) === "自我"){
                   return key_1[1];
                 } else return key_2[1];
-              },},
+              },label:function(){return texts[2]}},
               {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[2]) === "自我"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[2]}},
               {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
                 if (myMap.get(images[2]) === "自我"){
                   return key_1[0];
                 } else return key_2[0];
-              },},
+              },label:function(){return texts[2]}},
               
              
             ],
@@ -1250,6 +2026,7 @@ var welcome = {
                     data.correct = data.correct_response == data.key_press;
                     data.Image = jsPsych.timelineVariable("Image",true)();
                     data.text = jsPsych.timelineVariable("word",true)(); 
+                    data.label = jsPsych.timelineVariable('label', true)(); 
                     data.condition = "friend"
                 }
             },
@@ -1287,62 +2064,64 @@ var welcome = {
             if (myMap.get(images[0]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[0]}},
           {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
             if (myMap.get(images[0]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[0]}},
           {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
             if (myMap.get(images[0]) === "朋友"){
               return key_1[1];
             } else return key_2[1]; 
-          },},
+          },label:function(){return texts[0]}},
           {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[0]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[0]}},
+
           {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[1]}},
           {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[1]}},
           {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[1]}},
           {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[1]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[1]}},
+
           {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[2]}},
           {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[1];
             } else return key_2[1];
-          },},
+          },label:function(){return texts[2]}},
           {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[2]}},
           {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
             if (myMap.get(images[2]) === "朋友"){
               return key_1[0];
             } else return key_2[0];
-          },},
+          },label:function(){return texts[2]}},
         ],
                 randomize_order:true,
                 repetitions:6,
@@ -1405,6 +2184,7 @@ var welcome = {
                         data.correct = data.correct_response == data.key_press;
                         data.Image = jsPsych.timelineVariable("Image",true)();
                         data.text = jsPsych.timelineVariable("word",true)(); 
+                        data.label = jsPsych.timelineVariable('label',true)(); 
                         data.condition = "stranger"
                     }
                 },
@@ -1441,62 +2221,64 @@ var welcome = {
                     if (myMap.get(images[0]) === "生人"){
                       return key_1[0];
                     } else return key_2[0];
-                  },},
+                  },label:function(){return texts[0]}},
                   {Image:function(){return images[0]}, word:function(){return texts[0]},identify:function(){
                     if (myMap.get(images[0]) === "生人"){
                       return key_1[0];
                     } else return key_2[0];
-                  },},
+                  },label:function(){return texts[0]}},
                   {Image:function(){return images[0]}, word:function(){return texts[1]}, identify:function(){
                     if (myMap.get(images[0]) === "生人"){
                       return key_1[1];
                     } else return key_2[1]; 
-                  },},
+                  },label:function(){return texts[0]}},
                   {Image:function(){return images[0]}, word:function(){return texts[2]},identify:function(){
                     if (myMap.get(images[0]) === "生人"){
                       return key_1[1];
                     } else return key_2[1];
-                  },},
+                  },label:function(){return texts[0]}},
+
                   {Image:function(){return images[1]}, word:function(){return texts[0]},identify:function(){
                     if (myMap.get(images[1]) === "生人"){
                       return key_1[1];
                     } else return key_2[1];
-                  },},
+                  },label:function(){return texts[1]}},
                   {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
                     if (myMap.get(images[1]) === "生人"){
                       return key_1[0];
                     } else return key_2[0];
-                  },},
+                  },label:function(){return texts[1]}},
                   {Image:function(){return images[1]}, word:function(){return texts[1]},identify:function(){
                     if (myMap.get(images[1]) === "生人"){
                       return key_1[0];
                     } else return key_2[0];
-                  },},
+                  },label:function(){return texts[1]}},
                   {Image:function(){return images[1]}, word:function(){return texts[2]},identify:function(){
                     if (myMap.get(images[1]) === "生人"){
                       return key_1[1];
                     } else return key_2[1];
-                  },},
+                  },label:function(){return texts[1]}},
+
                   {Image:function(){return images[2]}, word:function(){return texts[0]},identify:function(){
                     if (myMap.get(images[2]) === "生人"){
                       return key_1[1];
                     } else return key_2[1];
-                  },},
+                  },label:function(){return texts[2]}},
                   {Image:function(){return images[2]}, word:function(){return texts[1]},identify:function(){
                     if (myMap.get(images[2]) === "生人"){
                       return key_1[1];
                     } else return key_2[1];
-                  },},
+                  },label:function(){return texts[2]}},
                   {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
                     if (myMap.get(images[2]) === "生人"){
                       return key_1[0];
                     } else return key_2[0];
-                  },},
+                  },label:function(){return texts[2]}},
                   {Image:function(){return images[2]}, word:function(){return texts[2]},identify:function(){
                     if (myMap.get(images[2]) === "生人"){
                       return key_1[0];
                     } else return key_2[0];
-                  },},
+                  },label:function(){return texts[2]}},
                   
                  
                 ],
@@ -1538,7 +2320,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                <p>您当前还剩余${blockTotalNum_Z}组实验</p>
+                                <p>在 优先关注"自我"图形 的要求下，您还剩余${blockTotalNum_Z}组实验</p>
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1562,7 +2344,7 @@ var welcome = {
                 }
               }
             
-              let blockTotalNum_P = 4;
+            let blockTotalNum_P = 4;
             let rest_friend = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1570,7 +2352,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                <p>您当前还剩余${blockTotalNum_P}组实验</p>
+                                <p>在 优先关注"朋友"图形 的要求下，您还剩余${blockTotalNum_P}组实验</p>
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1596,7 +2378,7 @@ var welcome = {
             
              
             
-              let blockTotalNum_S = 4;
+            let blockTotalNum_S = 4;
             let rest_stranger = {
               type:jsPsychHtmlButtonResponse,
               stimulus: function () {
@@ -1604,7 +2386,7 @@ var welcome = {
                     [{ correct: true }, { correct: false }]
                   );
                   return `
-                                <p>您当前还剩余${blockTotalNum_S}组实验</p>
+                                <p>在 优先关注"生人"图形 的要求下，您还剩余${blockTotalNum_S}组实验</p>
                                 <p>现在是休息时间，当您结束休息后，您可以点击 结束休息 按钮 继续</p>
                                 <p>建议休息时间还剩余<span id="iii">60</span>秒</p>`
                 },
@@ -1631,7 +2413,7 @@ var welcome = {
               let cong_self = {
                 type: jsPsychHtmlKeyboardResponse, 
                 stimulus: `
-                <p>恭喜您，正式实验中重点图形为与"自我"匹配图形的任务已经完成。</p>
+                <p>恭喜您，正式实验中重点图形为"自我"图形的任务已经完成。</p>
                 <p> <div style = "color: green"><按任意键继续></div></p>
                 `, 
                 choices: "ALL_KEYS",
@@ -1640,7 +2422,7 @@ var welcome = {
               let cong_friend = {
                 type: jsPsychHtmlKeyboardResponse, 
                 stimulus: `
-                <p>恭喜您，正式实验中重点图形为与"朋友"匹配图形的任务已经完成。</p>
+                <p>恭喜您，正式实验中重点图形为"朋友"图形的任务已经完成。</p>
                 <p> <div style = "color: green"><按任意键继续></div></p>
                 `, 
                 choices: "ALL_KEYS",
@@ -1649,7 +2431,7 @@ var welcome = {
               let cong_stranger = {
                 type: jsPsychHtmlKeyboardResponse, 
                 stimulus: `
-                <p>恭喜您，正式实验中重点图形为与"生人"匹配图形的任务已经完成。</p>
+                <p>恭喜您，正式实验中重点图形为"生人"图形的任务已经完成。</p>
                 <p> <div style = "color: green"><按任意键继续></div></p>
                 `, 
                 choices: "ALL_KEYS",
