@@ -247,7 +247,7 @@ var ins1free = {
        <p class='footer' style='color:white; font-size: 35px;'>如果出现的图形是与“自我”对应的图形 且 该图形与下方的文字标签匹配，请按<span style="color: lightgreen; font-size:35px">${key_1[0]}键</span></p><p class='footer' style='color:white; font-size: 35px;'>如果该图形与下方文字不匹配，请按<span style="color: lightgreen; font-size:35px">${key_1[1]}键</p></span>
        <p class='footer' style='color:white; font-size: 35px;'>如果出现的图形不是“自我”对应的图形 且 该图形与下方的文字标签匹配，请按<span style="color: lightgreen; font-size:35px">${key_2[0]}键</span></p><p class='footer' style='color:white; font-size: 35px;'>如果该图形与下方文字不匹配，请按<span style="color: lightgreen; font-size:35px">${key_2[1]}键</p></span>
        <p class='footer' style='color:white; font-size: 30px;'>请在实验过程中将您的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上准备按键。</p></span>
-       <p class='footer' style='color:lightgreen; font-size: 30px;'>>本阶段为自由练习，不限定反应时间，请您尽可能正确地按键。`
+       <p class='footer' style='color:lightgreen; font-size: 30px;'>本阶段为自由练习，不限定反应时间，请您尽可能正确地按键。`
        + end];
    },
  show_clickable_nav: true,
@@ -404,7 +404,7 @@ let freeprac_1 = {
   
  ],
      randomize_order:true,
-     repetitions:2,
+     repetitions:1,
      on_finish:function(){
          // $("body").css("cursor", "default"); //鼠标出现
      }
@@ -415,7 +415,7 @@ let freeprac_1 = {
    stimulus: function () {
      let trials = jsPsych.data.get().filter(
        [{ correct: true }, { correct: false }]
-     ).last(24); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+     ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
      //这里填入timeline_variables里面的trial数量
      let correct_trials = trials.filter({
        correct: true
@@ -464,7 +464,7 @@ let freeprac_1 = {
      conditional_function: function (data) {
        var trials = jsPsych.data.get().filter(
          [{ correct: true }, { correct: false }]
-       ).last(24);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+       ).last(12);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
        var correct_trials = trials.filter({
          correct: true
        });
@@ -484,7 +484,7 @@ let freeprac_1 = {
      loop_function: function () {
        var trials = jsPsych.data.get().filter(
          [{ correct: true }, { correct: false }]
-       ).last(24);//记得改，取数据
+       ).last(12);//记得改，取数据
        var correct_trials = trials.filter({
          correct: true
        });
@@ -644,7 +644,7 @@ let freeprac_1 = {
       
      ],
          randomize_order:true,
-         repetitions:2,//正是实验时改为6
+         repetitions:1,//正是实验时改为6
          on_finish:function(){
              // $("body").css("cursor", "default"); //鼠标出现
          }
@@ -654,7 +654,7 @@ let freeprac_1 = {
          stimulus: function () {
            let trials = jsPsych.data.get().filter(
              [{ correct: true }, { correct: false }]
-           ).last(24); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+           ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
            //这里填入timeline_variables里面的trial数量 
            let correct_trials = trials.filter({
              correct: true
@@ -717,7 +717,7 @@ let freeprac_1 = {
          conditional_function: function (data) {
            var trials = jsPsych.data.get().filter(
              [{ correct: true }, { correct: false }]
-           ).last(24);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+           ).last(12);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
            var correct_trials = trials.filter({
              correct: true
            });
@@ -737,7 +737,7 @@ let freeprac_1 = {
          loop_function: function () {
            var trials = jsPsych.data.get().filter(
              [{ correct: true }, { correct: false }]
-           ).last(24);//记得改，取数据
+           ).last(12);//记得改，取数据
            var correct_trials = trials.filter({
              correct: true
            });
@@ -896,7 +896,7 @@ let freeprac_1 = {
           
          ],
              randomize_order:true,
-             repetitions:2,
+             repetitions:1,
              on_finish:function(){
                  // $("body").css("cursor", "default"); //鼠标出现
              }
@@ -906,7 +906,7 @@ let freeprac_1 = {
              stimulus: function () {
                let trials = jsPsych.data.get().filter(
                  [{ correct: true }, { correct: false }]
-               ).last(24); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
+               ).last(12); // 运行逻辑：先挑出data里的所有的correct：true/false的数据行，成为新的数组，然后对倒数的某几组进行计算
                //这里填入timeline_variables里面的trial数量
                let correct_trials = trials.filter({
                  correct: true
@@ -967,7 +967,7 @@ let freeprac_1 = {
              conditional_function: function (data) {
                var trials = jsPsych.data.get().filter(
                  [{ correct: true }, { correct: false }]
-               ).last(24);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
+               ).last(12);//这里注意：只需要上一组的练习数据，而不是所有的数据！！ 如何实现：.last() 取data最后的几组数据（上一组练习数据）
                var correct_trials = trials.filter({
                  correct: true
                });
@@ -987,7 +987,7 @@ let freeprac_1 = {
              loop_function: function () {
                var trials = jsPsych.data.get().filter(
                  [{ correct: true }, { correct: false }]
-               ).last(24);//记得改，取数据
+               ).last(12);//记得改，取数据
                var correct_trials = trials.filter({
                  correct: true
                });
