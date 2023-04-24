@@ -13,9 +13,9 @@ var timeline = []
 
 
 
-var images = ['img/C_ambi40.png', 
-'img/S_ambi40.png', 
-'img/H_ambi40.png']
+var images = ['img/C_28.png', 
+'img/S_28.png', 
+'img/H_28.png']
 
 var preload = {
  type: jsPsychPreload,
