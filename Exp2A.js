@@ -217,7 +217,7 @@ var welcome = {
         tmpI += `<p class="content">${v}</p>`;
       });
       return ["<p class='header' style = 'font-size: 25px'>实验说明：</p><p style='color:white; font-size: 25px;line-height: 30px;'>您好，欢迎参加本实验。本次实验大约需要70分钟完成。</p><p style='color:white; font-size: 25px;'>在本实验中，您需要完成一个简单的知觉匹配任务。</p><p style='color:white; font-size: 25px;'>您将学习三种几何图形与文字标签的对应关系。</p>",
-        start + `<div class="box">${tmpI}</div>` +
+        start + `<div class="box">${tmpI}</div>`,
         `<p class='footer' style='font-size: 30px; line-height: 35px;'>您的任务是首先判断图形类别，再判断该图形是否与下方的文字标签匹配。
         <p class='footer' style='font-size: 30px; line-height: 35px;'>每个阶段开始前，会指定一种需要您重点关注的图形。重点图形对应一种按键规则，非重点图形对应另一种按键规则。
         <p class='footer' style='color:white; font-size: 30px;line-height: 35px;'> 对于要求中指定的需要重点关注的图形：
@@ -227,7 +227,7 @@ var welcome = {
         <p class='footer' style='color:white; font-size: 30px;line-height: 35px;'>如果图形与下方文字匹配，请按<span style="color: lightgreen; font-size:35px"> ${key_2[0]} 键</span></p>
         <p class='footer' style='color:white; font-size: 30px;'>如果 不匹配，请按 <span style="color: lightgreen; font-size:35px">${key_2[1]}键</span></p>
         <p class='footer' style='color:white; font-size: 25px;'>请在实验过程中将您左右手的<span style="color: lightgreen;">食指和中指</span>放在电脑键盘的相应键位上准备按键。</p></span>`,
-        `<p style='color:white; font-size: 30px; line-height: 25px;'>您将首先完成三种要求下的自由练习和正式练习。</p><p style='color:white; font-size: 30px; line-height: 30px;'>练习正确率达标后，您将完成三种要求下各5组匹配任务，每组包括72次按键反应，每组完成后会有休息时间。</p>`,
+        `<p style='color:white; font-size: 30px; line-height: 25px;'>您将首先完成三种要求下的自由练习和正式练习。</p><p style='color:white; font-size: 30px; line-height: 30px;'>练习正确率达标后，您将完成三种要求下各5组匹配任务，每组完成后会有休息时间。</p>`,
         middle + end];
     },
     show_clickable_nav: true,
