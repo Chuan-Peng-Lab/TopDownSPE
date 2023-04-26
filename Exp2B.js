@@ -307,7 +307,7 @@ let freeprac_1 = {
 
      choices: ['f', 'j','d','k'],
      response_start_time:1000,//开始作答时间，第二个刺激开始计算
-     trial_duration:250000,//结束时间，一共作答时间持续1500ms
+     trial_duration:25000,//结束时间，一共作答时间持续1500ms
      data:function(){return jsPsych.timelineVariable("identify")},
      on_finish: function(data){
          data.correct_response = jsPsych.timelineVariable("identify", true)();
@@ -545,7 +545,7 @@ let freeprac_1 = {
      
              choices: ['f', 'j','d','k'],
              response_start_time:1000,//开始作答时间，第二个刺激开始计算
-             trial_duration:250000,//结束时间，一共作答时间持续1500ms
+             trial_duration:25000,//结束时间，一共作答时间持续1500ms
              data:function(){return jsPsych.timelineVariable("identify")},
              on_finish: function(data){
                  data.correct_response = jsPsych.timelineVariable("identify", true)();
@@ -798,7 +798,7 @@ let freeprac_1 = {
  
          choices: ['f', 'j','d','k'],
              response_start_time:1000,//开始作答时间，第二个刺激开始计算
-             trial_duration:250000,//结束时间，一共作答时间持续1500ms
+             trial_duration:25000,//结束时间，一共作答时间持续1500ms
              data:function(){return jsPsych.timelineVariable("identify")},
              on_finish: function(data){
                  data.correct_response = jsPsych.timelineVariable("identify", true)();
