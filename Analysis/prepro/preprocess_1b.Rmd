@@ -24,6 +24,7 @@ df_raw <- list.files(file.path("../rawdata"), pattern = "exp1B_.*\\.csv$") %>%
           rt = as.numeric(rt)))%>%
   bind_rows()
 ```
+
 # 数据预处理
 
 ```{r}
@@ -31,9 +32,9 @@ df <- df_raw %>%
 
   # 选择变量
   select(subj_idx, 
-         #gender, 
-         #year, 
-         #education, 
+         gender, 
+         year, 
+         education, 
          #dist, 
          rt, 
          correct_response, 
@@ -47,7 +48,7 @@ df <- df_raw %>%
   dplyr::filter(trial_type == "psychophysics" & 
                 condition != "prac" & 
                 Image != "img/T_ambi40.png")%>%
-  # 添加列：matchness, selfness，ACC
+  # 添加列：matchness, label，ACC
   mutate(
     matchness =
       case_when(
@@ -55,25 +56,42 @@ df <- df_raw %>%
         subj_idx %% 2 == 1 & correct_response == "f" ~ "mismatch", 
         subj_idx %% 2 == 0 & correct_response == "f" ~ "match",
         subj_idx %% 2 == 0 & correct_response == "j" ~ "mismatch"),
-    selfness = 
+    ACC = 
       case_when(
-        word == '自我' ~ "selfness",
-        .default = as.character("others")
-      ),
-    ACC = case_when(
         correct == "false" ~ 0, 
-        correct == "true" ~ 1
-      )) %>%
+        correct == "true" ~ 1),
+    label = 
+      case_when(
+        subj_idx %% 6 == 1 & Image == "img/C_ambi40.png" ~ "self",
+        subj_idx %% 6 == 1 & Image == "img/H_ambi40.png" ~ "friend",
+        subj_idx %% 6 == 1 & Image == "img/S_ambi40.png" ~ "stranger",
+        subj_idx %% 6 == 2 & Image == "img/C_ambi40.png" ~ "friend",
+        subj_idx %% 6 == 2 & Image == "img/H_ambi40.png" ~ "stranger",
+        subj_idx %% 6 == 2 & Image == "img/S_ambi40.png" ~ "self",
+        subj_idx %% 6 == 3 & Image == "img/C_ambi40.png" ~ "friend",
+        subj_idx %% 6 == 3 & Image == "img/H_ambi40.png" ~ "self",
+        subj_idx %% 6 == 3 & Image == "img/S_ambi40.png" ~ "stranger",
+        subj_idx %% 6 == 4 & Image == "img/C_ambi40.png" ~ "stranger",
+        subj_idx %% 6 == 4 & Image == "img/H_ambi40.png" ~ "friend",
+        subj_idx %% 6 == 4 & Image == "img/S_ambi40.png" ~ "self",
+        subj_idx %% 6 == 5 & Image == "img/C_ambi40.png" ~ "stranger",
+        subj_idx %% 6 == 5 & Image == "img/H_ambi40.png" ~ "self",
+        subj_idx %% 6 == 5 & Image == "img/S_ambi40.png" ~ "friend",
+        subj_idx %% 6 == 0 & Image == "img/C_ambi40.png" ~ "self",
+        subj_idx %% 6 == 0 & Image == "img/H_ambi40.png" ~ "stranger",
+        subj_idx %% 6 == 0 & Image == "img/S_ambi40.png" ~ "friend"),
+    ) %>%
   # 剔除无关变量
   select(-correct_response, 
+         -correct,
          -key_press, 
          -Image, 
          -word,
          -trial_type,
+         -condition,
          )
 df
 ```
-
 
 ```{r}
 #正确率计算
@@ -81,18 +99,23 @@ df
   dplyr::mutate(ACC = ifelse(ACC == 1,1,0)) %>%
   dplyr::group_by(subj_idx,
                   matchness,
-                  selfness)%>%
+                  label
+                  )%>%
   dplyr::summarise(
     N = length(ACC),
     countN = sum(ACC),
     ACC = sum(ACC) / length(ACC)
   ) 
-  df_acc 
-  df_acc <- df_acc %>%
-    select(subj_idx,matchness,selfness,ACC) %>%
-    pivot_wider(names_from = c("selfness", "matchness"), values_from = "ACC")
+  df_acc
+```
+
+
+```{r}
+df_acc <- df_acc %>%
+    select(subj_idx,matchness,label,ACC) %>%
+   pivot_wider(names_from = c("label", "matchness"), values_from = "ACC")
   
-#write.csv(df_acc,file = "df_acc.csv")
+write.csv(df_acc,file = "exp1b_acc.csv")
 ```
 
 # 描述性统计
@@ -100,17 +123,18 @@ df
 ```{r}
 df_desc <- df %>%
           select(everything())%>%
+          dplyr::filter(ACC == 1)%>%
           group_by(subj_idx,
                    matchness,
-                   selfness)%>%
+                   label)%>%
           summarize(n = n(),
                     rt = mean(rt, na.rm = TRUE))%>%
           ungroup()
 df_desc
 df_desc %>% 
   select(-n) %>% 
-pivot_wider(names_from = c("selfness", "matchness"), values_from = "rt") %>% 
-write_csv("df2.csv")
+pivot_wider(names_from = c("label", "matchness"), values_from = "rt") %>% 
+write_csv("exp1b_rt.csv")
 ```
 
 # 方差分析
