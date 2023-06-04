@@ -1,0 +1,134 @@
+---
+title: "preprocess_Exp2"
+output: html_notebook
+---
+
+```{r}
+# load packages
+library(tidyverse)
+library(ggplot2)
+```
+
+
+```{r}
+df_raw <- list.files(file.path("./3_4_1_1_RawData"), pattern = "exp2_.*\\.csv$") %>%
+  # 对读取到的所有.out文件x都执行函数read.table
+  lapply(function(x) read.csv(file.path("./3_4_1_1_RawData", x), header = TRUE)) %>%
+    # 读取被试人口学信息
+  lapply(function(df) mutate(df,subj_idx = as.numeric(jsonlite::fromJSON(response[5])$Q0), 
+          gender = jsonlite::fromJSON(response[6]),
+          year = jsonlite::fromJSON(response[7])$Q0,
+          education = jsonlite::fromJSON(response[8])$Q0,
+          dist = view_dist_mm[9],
+          rt = as.numeric(rt)))%>%
+  bind_rows()
+
+```
+
+
+```{r}
+df <- df_raw %>% 
+
+  # 选择变量
+  select(subj_idx, 
+         gender, 
+         year, 
+         #education, 
+         #dist, 
+         rt, 
+         correct_response, 
+         correct, 
+         key_press, 
+         Image, 
+         text, 
+         condition,
+         trial_type,
+         label) %>% 
+  # 选择试次
+  dplyr::filter(trial_type == "psychophysics" & 
+                condition != "freeprac_self" & 
+                condition !="freeprac_friend" & 
+                condition !="freeprac_stranger" & 
+                condition !="prac_self" & 
+                condition !="prac_friend" & 
+                condition !="prac_stranger") %>%
+  mutate(
+    matchness = 
+      case_when(
+        subj_idx %% 2 == 1 & correct_response == "j" ~ "match",
+        subj_idx %% 2 == 1 & correct_response == "f" ~ "match",
+        subj_idx %% 2 == 1 & correct_response == "d" ~ "mismatch", 
+        subj_idx %% 2 == 1 & correct_response == "k" ~ "mismatch", 
+        subj_idx %% 2 == 0 & correct_response == "d" ~ "match",
+        subj_idx %% 2 == 0 & correct_response == "k" ~ "match",
+        subj_idx %% 2 == 0 & correct_response == "j" ~ "mismatch",
+        subj_idx %% 2 == 0 & correct_response == "f" ~ "mismatch",
+      ),
+    ACC = 
+      case_when(
+        correct == "false" ~ 0, 
+        correct == "true" ~ 1),
+
+    )%>%
+  # 剔除无关变量
+  select(-correct_response, 
+         -correct,
+         -key_press, 
+         -Image, 
+         -text,
+         -trial_type,
+         )
+df
+```
+
+
+```{r}
+#正确率计算
+  df_acc <- df %>%
+  dplyr::mutate(ACC = ifelse(ACC == 1,1,0)) %>%
+  dplyr::group_by(subj_idx,
+                  matchness,
+                  condition,
+                  label
+                  )%>%
+  dplyr::summarise(
+    N = length(ACC),
+    countN = sum(ACC),
+    ACC = sum(ACC) / length(ACC)
+  ) 
+  df_acc
+```
+
+
+```{r}
+df_acc <- df_acc %>%
+    select(subj_idx,matchness,condition,label,ACC) %>%
+   pivot_wider(names_from = c("label", "matchness","condition"), values_from = "ACC")
+  
+write.csv(df_acc,file = "exp2_acc.csv")
+```
+
+
+```{r}
+df_desc <- df %>%
+          select(everything())%>%
+          dplyr::filter(ACC == 1)%>%
+          group_by(subj_idx,
+                   condition,
+                   matchness,
+                   label)%>%
+          summarize(n = n(),
+                    rt = mean(rt, na.rm = TRUE))%>%
+          ungroup()
+df_desc
+df_desc %>% 
+  select(-n) %>% 
+pivot_wider(names_from = c("label", "matchness","condition"), values_from = "rt") %>% 
+write_csv("exp2_rt.csv")
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
