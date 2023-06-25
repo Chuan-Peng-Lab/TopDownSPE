@@ -9,12 +9,6 @@ library(tidyverse)
 library(ggplot2)
 ```
 
-```{r}
-getwd()
-
-```
-
-
 读取数据并合并
 ```{r}
 df_raw <- list.files(file.path("./2_4_1_1_RawData"), pattern = "exp1A_.*\\.csv$") %>%
@@ -90,10 +84,19 @@ df <- df_raw %>%
          -correct,
          -key_press, 
          -Image, 
-         -word,
+         #-word,
          -trial_type,
          -condition)
 df
+
+```
+
+
+```{r}
+df <- df %>%
+    select(subj_idx,gender,year,rt,matchness,label,word,ACC) 
+  
+write.csv(df,file = "exp1a_long.csv")
 ```
 
 
@@ -119,7 +122,7 @@ df_acc <- df_acc %>%
     select(subj_idx,matchness,label,ACC) %>%
    pivot_wider(names_from = c("label", "matchness"), values_from = "ACC")
   
-write.csv(df_acc,file = "exp1a_acc.csv")
+write.csv(df_acc,file = "exp1a_acc_wide.csv")
 ```
 # 描述性统计
 ```{r}
@@ -133,19 +136,15 @@ df_desc <- df %>%
                     rt = mean(rt, na.rm = TRUE))%>%
           ungroup()
 df_desc
+
+```
+
+
+```{r}
 df_desc %>% 
   select(-n) %>% 
 pivot_wider(names_from = c("label", "matchness"), values_from = "rt") %>% 
-write_csv("exp1a_rt.csv")
+write_csv("exp1a_rt_wide.csv")
 
-```
-# 方差分析
-```{r}
-model <- aov(rt ~ matchness * selfness, data = df)
-
-# 查看方差分析结果
-summary(model)
-TukeyHSD(model, "matchness")
-TukeyHSD(model, "selfness")
 ```
 

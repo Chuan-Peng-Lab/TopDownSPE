@@ -86,12 +86,20 @@ df <- df_raw %>%
          -correct,
          -key_press, 
          -Image, 
-         -word,
+         #-word,
          -trial_type,
          -condition,
          )
 df
 ```
+
+```{r}
+df <- df %>%
+    select(subj_idx,gender,year,rt,matchness,label,word,ACC) 
+  
+write.csv(df,file = "exp1b_long.csv")
+```
+
 
 ```{r}
 #正确率计算
@@ -115,7 +123,7 @@ df_acc <- df_acc %>%
     select(subj_idx,matchness,label,ACC) %>%
    pivot_wider(names_from = c("label", "matchness"), values_from = "ACC")
   
-write.csv(df_acc,file = "exp1b_acc.csv")
+write.csv(df_acc,file = "exp1b_acc_wide.csv")
 ```
 
 # 描述性统计
@@ -134,16 +142,5 @@ df_desc
 df_desc %>% 
   select(-n) %>% 
 pivot_wider(names_from = c("label", "matchness"), values_from = "rt") %>% 
-write_csv("exp1b_rt.csv")
-```
-
-# 方差分析
-
-```{r}
-model <- aov(rt ~ matchness * selfness, data = df)
-
-# 查看方差分析结果
-summary(model)
-TukeyHSD(model, "matchness")
-TukeyHSD(model, "selfness")
+write_csv("exp1b_rt_wide.csv")
 ```
