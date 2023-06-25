@@ -75,10 +75,18 @@ df <- df_raw %>%
          -correct,
          -key_press, 
          -Image, 
-         -text,
+         #-text,
          -trial_type,
          )
 df
+```
+
+
+```{r}
+df <- df %>%
+    select(subj_idx,gender,year,rt,text,condition,matchness,label,ACC) 
+  
+write.csv(df,file = "exp2_long.csv")
 ```
 
 
@@ -105,7 +113,7 @@ df_acc <- df_acc %>%
     select(subj_idx,matchness,condition,label,ACC) %>%
    pivot_wider(names_from = c("label", "matchness","condition"), values_from = "ACC")
   
-write.csv(df_acc,file = "exp2_acc.csv")
+write.csv(df_acc,file = "exp2_acc_wide.csv")
 ```
 
 
@@ -124,7 +132,7 @@ df_desc
 df_desc %>% 
   select(-n) %>% 
 pivot_wider(names_from = c("label", "matchness","condition"), values_from = "rt") %>% 
-write_csv("exp2_rt.csv")
+write_csv("exp2_rt_wide.csv")
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
