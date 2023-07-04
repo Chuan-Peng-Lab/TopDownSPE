@@ -293,7 +293,6 @@ const jsPsych = initJsPsych({
         data.correct = data.correct_response == data.key_press;//0错1对
         data.Image = jsPsych.timelineVariable("Image", true)();
         data.word = jsPsych.timelineVariable('word', true)();
-        data.label = jsPsych.timelineVariable('label', true)();
         data.condition = "prac"
     }
 },
@@ -327,12 +326,12 @@ const jsPsych = initJsPsych({
 ],
 
 timeline_variables:[
-{Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}, label:function(){return texts2[0]}},
-{Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}, label:function(){return texts2[1]}},
-{Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}, label:function(){return texts2[2]}},
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[1]}, label:function(){return texts2[3]}},
+{Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
+{Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
+{Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
+{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[1]}},
 
-/*{Image:function(){return images2[0]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
+{Image:function(){return images2[0]}, word:function(){return texts2[1]}, identify:function(){return key[1]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[2]}, identify:function(){return key[1]}},
 {Image:function(){return images2[2]}, word:function(){return texts2[0]}, identify:function(){return key[1]}},
 {Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[1]}},
@@ -345,7 +344,7 @@ timeline_variables:[
 {Image:function(){return images2[0]}, word:function(){return texts2[0]}, identify:function(){return key[0]}},
 {Image:function(){return images2[1]}, word:function(){return texts2[1]}, identify:function(){return key[0]}},
 {Image:function(){return images2[2]}, word:function(){return texts2[2]}, identify:function(){return key[0]}},
-{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[1]}},*/
+{Image:function(){return images2[3]}, word:function(){return texts2[3]}, identify:function(){return key[1]}},
 
 ],
 randomize_order:true,
