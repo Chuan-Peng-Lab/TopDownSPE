@@ -1,0 +1,6 @@
+exp1_acc：实验1 6个条件下的正确率，包括实验A和实验B
+exp1_rt：实验1 6个条件下反应时，包括实验A和实验B
+exp1_rt_A_B：实验A 实验B中的反应时
+exp1_SampleSize：用来确定需要收多少数据,
+exp1A_matchness：实验1A中的快同效应（匹配的主效应)
+exp1B_matchness：实验1B中的快同效应（匹配的主效应)
