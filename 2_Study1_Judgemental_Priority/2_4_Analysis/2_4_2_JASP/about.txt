@@ -1,0 +1,9 @@
+input:
+	exp1_acc.csv
+	exp1_rt.csv
+	exp1_descriptive.csv
+
+output:
+	exp1_acc.jasp
+	exp1_rt.jasp
+	exp1_descriptive.jasp

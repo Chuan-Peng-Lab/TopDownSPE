@@ -1,0 +1,15 @@
+R code:
+	Exp1A_preprocessing.Rmd
+	Exp1B_preprocessing.Rmd
+
+output of R code:
+	exp1a_acc_wide.csv
+	exp1a_long.csv
+	exp1a_rt_wide.csv
+	exp1b_acc_wide.csv
+	exp1b_long.csv
+	exp1b_rt_wide.csv
+integrated data
+	exp1_acc.csv	--conbine exp1a_acc_wide and exp1b_acc_wide, and according to the JASP data analysis format,count the required variables
+	exp1_rt.csv	--conbine exp1a_rt_wide and exp1b_rt_wide, and according to the JASP data analysis format,count the required variables
+	exp1_descriptive.csv	--conbine exp1a_long.csv and exp1b_long.csv, and count age and gender

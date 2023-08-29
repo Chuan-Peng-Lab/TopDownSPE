@@ -1,0 +1,9 @@
+input:
+	exp2_acc_wide.csv
+	exp2_rt_paired_t.csv
+	exp1_descriptive.csv
+
+output:
+	exp2_acc_wide.jasp
+	exp2_rt_paired_t.jasp
+	exp2_descriptive.jasp
