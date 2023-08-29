@@ -1,2 +1,2 @@
-2_4_1中有数据预处理的R代码及预处理后输出后整合的数据；
-2_4_2中是使用JASP分析整合后数据的记录。
+2_4_1:Stores the preprocessed R code and the output results;
+2_4_2:Store the results of the JASP analysis。
