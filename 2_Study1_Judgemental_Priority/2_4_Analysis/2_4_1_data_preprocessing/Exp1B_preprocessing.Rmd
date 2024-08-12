@@ -82,22 +82,24 @@ df <- df_raw %>%
         subj_idx %% 6 == 0 & Image == "img/S_ambi40.png" ~ "friend"),
     ) %>%
   # 剔除无关变量
-  select(-correct_response, 
-         -correct,
-         -key_press, 
+  select(#-correct_response, 
+         #-correct,
+         #-key_press, 
          -Image, 
          #-word,
          -trial_type,
          -condition,
          )
 df
+
+write.csv(df,file = "exp1b_long.csv")
 ```
 
 ```{r}
-df <- df %>%
-    select(subj_idx,gender,year,rt,matchness,label,word,ACC) 
+#df <- df %>%
+    #select(subj_idx,gender,year,rt,matchness,label,word,ACC) 
   
-write.csv(df,file = "exp1b_long.csv")
+#write.csv(df,file = "exp1b_long.csv")
 ```
 
 
