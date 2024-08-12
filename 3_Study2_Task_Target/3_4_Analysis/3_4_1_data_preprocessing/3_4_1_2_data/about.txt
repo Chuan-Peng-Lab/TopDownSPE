@@ -6,6 +6,10 @@ output of R code:
 	exp2_long.csv
 	exp2_rt_wide.csv
 
-integrated data
-	exp2_rt_paired_t.csv	--according to the JASP data analysis format,count the required variables
-	exp1_descriptive.csv	--on the basis of exp2_long.csv, count age and gender
+# files 
+	exp1_descriptive.csv : calculate from "exp2_long.csv"
+
+# variable meaning
+任务目标 : friend, self, stranger
+匹配情况 : match, mismatch
+图形的社会相关 : 朋友，自我，生人
