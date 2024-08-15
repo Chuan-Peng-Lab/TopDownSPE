@@ -40,30 +40,16 @@ df <- df_raw %>%
          correct, 
          key_press, 
          Image, 
-         text, 
+         shape, # 无
          condition,
-         trial_type,
-         label) %>% 
-  # 选择正式实验试次（程序未区分正式实验和练习！！）
+         trial_type) %>%
+         # label # 无
+  # 选择正式实验试次
   dplyr::filter(trial_type == "psychophysics" & 
-                condition != "freeprac_self" & 
-                condition !="freeprac_friend" & 
-                condition !="freeprac_stranger" & 
-                condition !="prac_self" & 
+                condition != "prac_self" & 
                 condition !="prac_friend" & 
                 condition !="prac_stranger") %>%
   mutate(
-    matchness = 
-      case_when(
-        subj_idx %% 2 == 1 & correct_response == "j" ~ "match",
-        subj_idx %% 2 == 1 & correct_response == "f" ~ "match",
-        subj_idx %% 2 == 1 & correct_response == "d" ~ "mismatch", 
-        subj_idx %% 2 == 1 & correct_response == "k" ~ "mismatch", 
-        subj_idx %% 2 == 0 & correct_response == "d" ~ "match",
-        subj_idx %% 2 == 0 & correct_response == "k" ~ "match",
-        subj_idx %% 2 == 0 & correct_response == "j" ~ "mismatch",
-        subj_idx %% 2 == 0 & correct_response == "f" ~ "mismatch",
-      ),
     ACC = 
       case_when(
         correct == "false" ~ 0, 
@@ -71,11 +57,11 @@ df <- df_raw %>%
 
     )%>%
   # 剔除无关变量
-  select(#-correct_response, 
-         #-correct,
-         #-key_press, 
+  select(-correct_response,
+         -correct,
+         -key_press,
          -Image, 
-         #-text,
+         # -text,
          -trial_type,
          )
 write.csv(df,file = "exp3_long.csv")
@@ -95,9 +81,8 @@ write.csv(df,file = "exp3_long.csv")
   df_acc <- df %>%
   dplyr::mutate(ACC = ifelse(ACC == 1,1,0)) %>%
   dplyr::group_by(subj_idx,
-                  matchness,
                   condition,
-                  label
+                  shape
                   )%>%
   dplyr::summarise(
     N = length(ACC),
@@ -110,8 +95,8 @@ write.csv(df,file = "exp3_long.csv")
 
 ```{r}
 df_acc <- df_acc %>%
-    select(subj_idx,matchness,condition,label,ACC) %>%
-   pivot_wider(names_from = c("label", "matchness","condition"), values_from = "ACC")
+    select(subj_idx,condition,shape,ACC) %>%
+   pivot_wider(names_from = c("shape", "condition"), values_from = "ACC")
   
 write_excel_csv(df_acc,file = "exp3_acc_wide.csv")
 ```
@@ -123,15 +108,14 @@ df_desc <- df %>%
           dplyr::filter(ACC == 1)%>%
           group_by(subj_idx,
                    condition,
-                   matchness,
-                   label)%>%
+                   shape)%>%
           summarize(n = n(),
                     rt = mean(rt, na.rm = TRUE))%>%
           ungroup()
 df_desc
 df_desc %>% 
   select(-n) %>% 
-pivot_wider(names_from = c("label", "matchness","condition"), values_from = "rt") %>% 
+pivot_wider(names_from = c("shape", "condition"), values_from = "rt") %>% 
 write_excel_csv("exp3_rt_wide.csv")
 ```
 
