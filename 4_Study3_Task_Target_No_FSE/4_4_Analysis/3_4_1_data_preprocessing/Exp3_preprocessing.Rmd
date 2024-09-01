@@ -1,0 +1,126 @@
+---
+title: "preprocess_Exp3"
+output: html_notebook
+---
+
+```{r}
+# load packages
+library(tidyverse)
+library(ggplot2)
+```
+
+
+```{r}
+df_raw <- list.files(file.path("./3_4_1_1_RawData"), pattern = "exp3_.*\\.csv$") %>%
+  # 对读取到的所有.out文件x都执行函数read.table
+  lapply(function(x) read.csv(file.path("./3_4_1_1_RawData", x), header = TRUE)) %>%
+    # 读取被试人口学信息
+  lapply(function(df) mutate(df,subj_idx = as.numeric(jsonlite::fromJSON(response[5])$Q0), 
+          gender = jsonlite::fromJSON(response[6]),
+          year = jsonlite::fromJSON(response[7])$Q0,
+          education = jsonlite::fromJSON(response[8])$Q0,
+          dist = view_dist_mm[9],
+          rt = as.numeric(rt)))%>%
+  bind_rows()
+
+```
+
+
+```{r}
+df <- df_raw %>% 
+
+  # 选择变量
+  select(subj_idx, 
+         gender, 
+         year, 
+         #education, 
+         #dist, 
+         rt, 
+         correct_response, 
+         correct, 
+         key_press, 
+         Image, 
+         shape, # 无
+         condition,
+         trial_type) %>%
+         # label # 无
+  # 选择正式实验试次
+  dplyr::filter(trial_type == "psychophysics" & 
+                condition != "prac_self" & 
+                condition !="prac_friend" & 
+                condition !="prac_stranger") %>%
+  mutate(
+    ACC = 
+      case_when(
+        correct == "false" ~ 0, 
+        correct == "true" ~ 1),
+
+    )%>%
+  # 剔除无关变量
+  select(-correct_response,
+         -correct,
+         -key_press,
+         -Image, 
+         # -text,
+         -trial_type,
+         )
+write.csv(df,file = "exp3_long.csv")
+```
+
+
+```{r}
+#df <- df %>%
+    #select(subj_idx,gender,year,rt,key_press,correct,text,condition,matchness,label,ACC) 
+  
+#write.csv(df,file = "exp2_long.csv")
+```
+
+
+```{r}
+#正确率计算
+  df_acc <- df %>%
+  dplyr::mutate(ACC = ifelse(ACC == 1,1,0)) %>%
+  dplyr::group_by(subj_idx,
+                  condition,
+                  shape
+                  )%>%
+  dplyr::summarise(
+    N = length(ACC),
+    countN = sum(ACC),
+    ACC = sum(ACC) / length(ACC)
+  ) 
+  df_acc
+```
+
+
+```{r}
+df_acc <- df_acc %>%
+    select(subj_idx,condition,shape,ACC) %>%
+   pivot_wider(names_from = c("shape", "condition"), values_from = "ACC")
+  
+write_excel_csv(df_acc,file = "exp3_acc_wide.csv")
+```
+
+
+```{r}
+df_desc <- df %>%
+          select(everything())%>%
+          dplyr::filter(ACC == 1)%>%
+          group_by(subj_idx,
+                   condition,
+                   shape)%>%
+          summarize(n = n(),
+                    rt = mean(rt, na.rm = TRUE))%>%
+          ungroup()
+df_desc
+df_desc %>% 
+  select(-n) %>% 
+pivot_wider(names_from = c("shape", "condition"), values_from = "rt") %>% 
+write_excel_csv("exp3_rt_wide.csv")
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

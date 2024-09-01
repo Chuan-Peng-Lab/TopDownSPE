@@ -1,9 +1,13 @@
-input:
-	exp1_acc.csv
-	exp1_rt.csv
-	exp1_descriptive.csv
+# 数据内容
+exp1_acc.csv : 在2_4_1_2_data exp1_acc.csv的基础上添加用于简单效应分析的列。
+exp1_rt.csv : 在2_4_1_2_data exp1_rt.csv的基础上添加用于简单效应分析的列。
 
-output:
-	exp1_acc.jasp
-	exp1_rt.jasp
-	exp1_descriptive.jasp
+# 变量含义
+1_match : 匹配优先条件下的匹配试次
+1_mismatch : 匹配优先条件下的不匹配试次
+2_match	: 不匹配优先条件下的匹配试次
+2_mismatch : 不匹配优先条件下的不匹配试次
+A_B_dif : 不同判断优先级的快同效应量
+friend_dif : 朋友图形下的快同效应量
+self_dif : 	自我图形下的快同效应量
+stranger_dif: 生人图形下的快同效应量

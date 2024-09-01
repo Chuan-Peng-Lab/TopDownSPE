@@ -1,2 +1,2 @@
-2_4_1:Stores the preprocessed R code and the output results;
-2_4_2:Store the results of the JASP analysis¡£
+2_4_1 : Stores the preprocessed R code and the output results;
+2_4_2 : Store the results of the JASP analysis¡£
